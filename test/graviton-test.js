@@ -1,3 +1,10 @@
+var init = function(klass) {
+  allowAll(klass);
+  if (Meteor.isServer) {
+    klass.remove({});
+  }
+};
+
 var allowAll = function(klass) {
   klass.allow({
     insert: function(userId, model) {
@@ -12,32 +19,66 @@ var allowAll = function(klass) {
   });
 };
 
-Car = Model.define("cars", {
+Car = Model.Car = Model.define("cars", {
   initialize: function() {
     this.set('price', this.get('price') - 2);
   },
   hasMany: {
     wheels: {
-      klass: 'wheels',
+      klass: 'Wheel',
       foreignKey: 'carId'
+    }
+  },
+  belongsToMany: {
+    drivers: {
+      klass: 'Driver',
+      field: 'driverIds',
+      cls: Driver
+    }
+  },
+  embeds: {
+    plate: {
+      klass: 'Plate'
+    }
+  },
+  embedsMany: {
+    windows: {
+      klass: 'Window'
     }
   }
 });
-allowAll(Car);
+init(Car);
 
-Wheel = Model.define("wheels", {
+Wheel = Model.Wheel = Model.define("wheels", {
   defaults: {
     tread: 'new'
   },
   belongsTo: {
     car: {
-      klass: 'cars',
+      klass: 'Car',
       field: 'carId'
     }
   }
 });
-allowAll(Wheel);
+init(Wheel);
 
+Driver = Model.Driver = Model.define("drivers", {
+  hasMany: {
+    cars: {
+      klass: 'Car',
+      foreignKey: 'driverIds'
+    }
+  }
+});
+init(Driver);
+
+Plate = Model.Plate = Model.define(null, {
+
+});
+
+Window = Model.Window = Model.define(null, {
+
+});
 
 
 var doc = {color: 'red', speed: 'fast', price: 100, engine: {type: 'combustion', cylinders: 8}};
@@ -54,6 +95,23 @@ w.save();
 
 w.set("isFlat", true);
 w.save();
+
+c.drivers.add({name: "Mario"});
+c.drivers.add({name: "Dale"});
+
+c.set("plate", {code: "BASFACE"});
+
+c.windows.add([
+  {type: "windshield"},
+  {type: "frontDriver"},
+  {type: "frontPassenger"},
+  {type: "rear"}
+]);
+
+
+
+
+
 
 
 Tinytest.add('Model - initialize', function(test) {
@@ -78,10 +136,26 @@ Tinytest.add('Relations - hasMany', function(test) {
   test.equal(c.wheels.find().count(), 4);
   test.equal(c.wheels.all().length, c.wheels.find().count());
   test.equal(c.wheels.find({tread: 'new'}).count(), 3);
-  test.equal(c.wheels.findOne()._id, c.wheels.findOne()._id);
+  test.equal(Driver.findOne().cars.findOne()._id, c._id);
 });
 
 Tinytest.add('Relations - belongsTo', function(test) {
   test.equal(c.wheels.findOne().car()._id, c._id);
 });
 
+Tinytest.add('Relations - belongsToMany', function(test) {
+  test.equal(c.drivers.find().count(), 2);
+  test.equal(_.isArray(c.get("driverIds")), true);
+});
+
+Tinytest.add('Relations - embeds', function(test) {
+  test.isTrue(c.plate() instanceof Model);
+  test.equal(c.plate().get("code"), "BASFACE");
+});
+
+Tinytest.add('Relations - embedsMany', function(test) {
+  test.isTrue(c.windows.at(0) instanceof Model);
+  test.equal(c.windows.all().length, 4);
+  test.equal(c.windows.at(2).get("type"), "frontPassenger");
+  test.equal(c.get("windows").length, 4);
+ }); 

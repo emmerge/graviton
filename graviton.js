@@ -3,19 +3,17 @@ var global = this;
 var Relation = function(model, config) {
   config = config || {};
   this._model = model;
-  console.log(config);
-  // this._klass = global[config.klass];
   this._klass = config.klass;
   this._field = config.field;
   this._foreignKey = config.foreignKey;
 };
 Relation.prototype.constructor = Relation;
 Relation.prototype.klass = function() {
-  return Model._klasses[this._klass];
+  return Model[this._klass];
 };
 Relation.prototype.build = function(obj) {
   if (obj instanceof Model) return obj;
-  return this.klass().build(obj);
+  return this.klass().build(obj); 
 }; 
 // inserts model if it doesn't have an id - typically called by add
 Relation.prototype.persist = function(model) {
@@ -97,10 +95,13 @@ ManyRelation.prototype.add = function(model) {
 BelongsToMany.prototype.add = function(model) {
   if (ManyRelation.prototype.add.apply(this, arguments)) return;
 
+  model = this.build(model);
+  Relation.prototype.persist.call(this, model);
+
   var push = {$push: {}};
   push['$push'][this._field] = model._id;
   this._model.attributes[this._field].push(model._id);
-  this._model.klass().update(this._model._id, push);
+  this._model._klass.update(this._model._id, push);
 };
 
 HasMany.prototype.add = function(model) {
@@ -143,12 +144,14 @@ var EmbeddedModels = function(model, config, name) {
   this._name = name;
   if (!this._model.get(this._name)) this._model.set(this._name, []);
 };
+EmbeddedModels.prototype = Object.create(Relation.prototype);
+EmbeddedModels.prototype.constructor = EmbeddedModels;
 
 EmbeddedModels.prototype.add = function(model) {
-  if (!model instanceof Model) {
-    model = this.klass().build(model);
-  }
-  // var attrs = (model instanceof Model) ? model.attributes : model;
+  if (ManyRelation.prototype.add.apply(this, arguments)) return;
+
+  model = this.build(model);
+
   this._model.get(this._name).push(model.attributes);
   this._model.save();
 };
@@ -262,7 +265,6 @@ Model.define = function(collectionName, options) {
 
   collection.build = model;
 
-  Model._klasses[collectionName] = collection;
   return collection;
 };
 
@@ -281,7 +283,7 @@ Model.prototype.plain = function() {
 
 Model.prototype.save = function() {
   if (this._id) {
-    this._klass.update(this._id, this.attributes);
+    this._klass.update(this._id, {$set: _.omit(this.attributes, '_id')});
   } else {
     this._id = this._klass.insert(this.attributes);
     this.set("_id", this._id);

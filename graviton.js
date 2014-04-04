@@ -3,23 +3,21 @@ var global = this;
 var Relation = function(model, config) {
   config = config || {};
   this._model = model;
-  this._klass = config.klass;
+  this._klass = Model._klasses[config.klass];
   this._field = config.field;
   this._foreignKey = config.foreignKey;
 };
 Relation.prototype.constructor = Relation;
-Relation.prototype.klass = function() {
-  return Model[this._klass];
-};
+
 Relation.prototype.build = function(obj) {
   if (obj instanceof Model) return obj;
-  return this.klass().build(obj); 
-}; 
+  return this._klass.build(obj); 
+};
 // inserts model if it doesn't have an id - typically called by add
 Relation.prototype.persist = function(model) {
   model = this.build(model);
   if (!model._id) {
-    model._id = this.klass().insert(model.attributes);
+    model._id = this._klass.insert(model.attributes);
     model.set('_id', model._id);
   }
   return model;
@@ -33,11 +31,11 @@ ManyRelation.prototype = Object.create(Relation.prototype);
 ManyRelation.prototype.constructor = ManyRelation;
 
 ManyRelation.prototype.find = function(query) {
-  return this.klass().find(_.extend(query || {}, this._filter()));
+  return this._klass.find(_.extend(query || {}, this._filter()));
 };
 
 ManyRelation.prototype.findOne = function(query) {
-  return this.klass().findOne(_.extend(query || {}, this._filter()));
+  return this._klass.findOne(_.extend(query || {}, this._filter()));
 };
 
 ManyRelation.prototype.plain = function() {
@@ -114,7 +112,7 @@ HasMany.prototype.add = function(model) {
 
   var set = {$set: {}};
   set['$set'][this._foreignKey] = this._model._id;
-  this.klass().update(model._id, set);
+  this._klass.update(model._id, set);
 };
 
 
@@ -123,7 +121,7 @@ HasMany.prototype.add = function(model) {
 var belongsTo = function(model, config, name) {
   var rel = new Relation(model, config);
   return function() {
-    return rel.klass().findOne(rel._model.get(rel._field));
+    return rel._klass.findOne(rel._model.get(rel._field));
   };
 };
 
@@ -132,7 +130,7 @@ var embeds = function(model, config, name) {
     var obj = model.get(name);
     if (!obj) return;
     var rel = new Relation(model, config);
-    var subModel = rel.klass().build(obj);
+    var subModel = rel._klass.build(obj);
     subModel._parent = model;
     return subModel;
   };
@@ -161,7 +159,7 @@ EmbeddedModels.prototype.plain = ManyRelation.prototype.plain;
 EmbeddedModels.prototype.all = function() {
   var self = this;
   return _.map(this._objects(), function(obj) {
-    var subModel = self.klass().build(obj);
+    var subModel = self._klass.build(obj);
     subModel._parent = self._model;
     return subModel;
   });
@@ -176,7 +174,7 @@ EmbeddedModels.prototype._objects = function() {
 EmbeddedModels.prototype.at = function(index) {
   var obj = this._objects()[index];
   if (!obj) return;
-  return this.klass().build(obj);
+  return this._klass.build(obj);
 };
 
 
@@ -185,7 +183,9 @@ Model = function(klass, obj, options) {
   options = options || {};
   this.attributes = obj;
 
-  this._klass = klass;
+  this._klass = Model._klasses[klass];
+
+  if (_.isUndefined(this._klass)) throw "Can't find klass '"+klass+"' in:"+JSON.stringify(Model._klasses, null, 2);
 
   if (_.isFunction(options.initialize)) {
     options.initialize.call(this, obj);
@@ -242,13 +242,21 @@ Model.setProperty = function(obj, key, val) {
 
 // use this to declare new models
 // options contain the relations etc.
-Model.define = function(collectionName, options) {
+Model.define = function(klass, options) {
+
+  _.defaults(options, {
+    persist: true
+  });
+
+  
 
   var model = function(obj) {
-    return new Model(collection, obj, options);
+    return new Model(klass, obj, options);
   };
 
-  var collection = new Meteor.Collection(collectionName, {
+  var colName = (options.persist) ? klass : null;
+
+  var collection = new Meteor.Collection(colName, {
     transform: model
   });
 
@@ -264,6 +272,8 @@ Model.define = function(collectionName, options) {
   }
 
   collection.build = model;
+
+  this._klasses[klass] = collection;
 
   return collection;
 };

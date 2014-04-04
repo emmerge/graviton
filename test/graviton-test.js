@@ -25,25 +25,24 @@ Car = Model.Car = Model.define("cars", {
   },
   hasMany: {
     wheels: {
-      klass: 'Wheel',
+      klass: 'wheels',
       foreignKey: 'carId'
     }
   },
   belongsToMany: {
     drivers: {
-      klass: 'Driver',
-      field: 'driverIds',
-      cls: Driver
+      klass: 'drivers',
+      field: 'driverIds'
     }
   },
   embeds: {
     plate: {
-      klass: 'Plate'
+      klass: 'plates'
     }
   },
   embedsMany: {
     windows: {
-      klass: 'Window'
+      klass: 'windows'
     }
   }
 });
@@ -55,7 +54,7 @@ Wheel = Model.Wheel = Model.define("wheels", {
   },
   belongsTo: {
     car: {
-      klass: 'Car',
+      klass: 'cars',
       field: 'carId'
     }
   }
@@ -65,19 +64,19 @@ init(Wheel);
 Driver = Model.Driver = Model.define("drivers", {
   hasMany: {
     cars: {
-      klass: 'Car',
+      klass: 'cars',
       foreignKey: 'driverIds'
     }
   }
 });
 init(Driver);
 
-Plate = Model.Plate = Model.define(null, {
-
+Plate = Model.Plate = Model.define("plates", {
+  persist: false // sends null as mongo collection name to Meteor.Collection
 });
 
-Window = Model.Window = Model.define(null, {
-
+Window = Model.Window = Model.define("windows", {
+  persist: false
 });
 
 
@@ -132,7 +131,7 @@ Tinytest.add('Model - save', function(test) {
 });
 
 Tinytest.add('Relations - hasMany', function(test) {
-  test.equal(c.wheels.klass()._name, 'wheels');
+  test.equal(c.wheels._klass._name, 'wheels');
   test.equal(c.wheels.find().count(), 4);
   test.equal(c.wheels.all().length, c.wheels.find().count());
   test.equal(c.wheels.find({tread: 'new'}).count(), 3);

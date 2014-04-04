@@ -1,7 +1,7 @@
 {
   "name": "graviton",
   "description": "Relations and models for Meteor collections",
-  "homepage": "",
+  "homepage": "https://github.com/fractallian/graviton",
   "author": "Jeremy Dunn",
   "version": "0.0.1",
   "git": "https://github.com/fractallian/graviton.git",

@@ -152,7 +152,6 @@ Tinytest.add('Relations - hasMany', function(test) {
 Tinytest.add('Relations - hasOne', function(test) {
   test.isTrue(c.manufacturer() instanceof Model);
   var mfr = Mfr.findOne();
-  debugger;
   test.equal(mfr._id, c.manufacturer()._id);
 });
 

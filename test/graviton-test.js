@@ -55,6 +55,7 @@ Car = Model.Car = Model.define("cars", {
 init(Car);
 
 Mfr = Model.define("manufacturers", {});
+init(Mfr);
 
 Wheel = Model.define("wheels", {
   defaults: {

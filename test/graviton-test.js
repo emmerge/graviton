@@ -29,6 +29,12 @@ Car = Model.Car = Model.define("cars", {
       foreignKey: 'carId'
     }
   },
+  hasOne: {
+    manufacturer: {
+      klass: 'manufacturers',
+      foreignKey: 'carId'
+    }
+  },
   belongsToMany: {
     drivers: {
       klass: 'drivers',
@@ -48,7 +54,9 @@ Car = Model.Car = Model.define("cars", {
 });
 init(Car);
 
-Wheel = Model.Wheel = Model.define("wheels", {
+Mfr = Model.define("manufacturers", {});
+
+Wheel = Model.define("wheels", {
   defaults: {
     tread: 'new'
   },
@@ -61,7 +69,7 @@ Wheel = Model.Wheel = Model.define("wheels", {
 });
 init(Wheel);
 
-Driver = Model.Driver = Model.define("drivers", {
+Driver = Model.define("drivers", {
   hasMany: {
     cars: {
       klass: 'cars',
@@ -71,11 +79,11 @@ Driver = Model.Driver = Model.define("drivers", {
 });
 init(Driver);
 
-Plate = Model.Plate = Model.define("plates", {
+Plate = Model.define("plates", {
   persist: false // sends null as mongo collection name to Meteor.Collection
 });
 
-Window = Model.Window = Model.define("windows", {
+Window = Model.define("windows", {
   persist: false
 });
 
@@ -85,6 +93,8 @@ doc._id = Car.insert(doc);
 
 var c = Car.findOne(doc._id);
 if (Meteor.isClient) window.c = c;
+
+c.manufacturer({name: "Audi", location: "Germany"});
 
 c.wheels.add({});
 c.wheels.add([{}, {tread: 'worn'}, {}]);
@@ -136,6 +146,13 @@ Tinytest.add('Relations - hasMany', function(test) {
   test.equal(c.wheels.all().length, c.wheels.find().count());
   test.equal(c.wheels.find({tread: 'new'}).count(), 3);
   test.equal(Driver.findOne().cars.findOne()._id, c._id);
+});
+
+Tinytest.add('Relations - hasOne', function(test) {
+  test.isTrue(c.manufacturer() instanceof Model);
+  var mfr = Mfr.findOne();
+  debugger;
+  test.equal(mfr._id, c.manufacturer()._id);
 });
 
 Tinytest.add('Relations - belongsTo', function(test) {

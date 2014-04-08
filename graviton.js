@@ -105,7 +105,6 @@ Model.prototype.get = function(key) {
 
 Model.prototype.set = function(key, value) {
   return Model.setProperty(this.attributes, key, value);
-  return this;
 };
 
 Model.prototype.plain = function() {

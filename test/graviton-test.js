@@ -66,9 +66,18 @@ Wheel = Model.define("wheels", {
       klass: 'cars',
       field: 'carId'
     }
+  },
+  hasOne: {
+    rim: {
+      klass: 'rims',
+      foreignKey: 'wheelId'
+    }
   }
 });
 init(Wheel);
+
+Rim = Model.define("rims", {});
+init(Rim);
 
 Driver = Model.define("drivers", {
   hasMany: {
@@ -174,4 +183,4 @@ Tinytest.add('Relations - embedsMany', function(test) {
   test.equal(c.windows.all().length, 4);
   test.equal(c.windows.at(2).get("type"), "frontPassenger");
   test.equal(c.get("windows").length, 4);
- }); 
+ });

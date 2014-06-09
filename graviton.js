@@ -76,7 +76,8 @@ Model.define = function(klass, options) {
   });
 
   var model = function(obj) {
-    return new Model(klass, obj, options);
+    var Cls = options.modelCstr || Model;
+    return new Cls(klass, obj, options);
   };
 
   var colName = (options.persist) ? klass : null;
@@ -101,6 +102,17 @@ Model.define = function(klass, options) {
   this._klasses[klass] = collection;
 
   return collection;
+};
+
+// for creating a custom class to user for model transforms
+Model.extend = function(proto) {
+  var self = this;
+  var o = function(klass, obj, options) {
+    self.call(this, klass, obj, options);
+  };
+  o.prototype = _.extend({}, this.prototype, proto);
+  o.extend = this.extend;
+  return o;
 };
 
 Model.prototype.get = function(key) {

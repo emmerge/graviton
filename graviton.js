@@ -36,6 +36,10 @@ Model = function(klass, obj, options) {
 
 Model._klasses = {};
 
+Meteor.startup(function() {
+  Model._klasses.users = Meteor.users;
+});
+
 // soaks nulls
 // use a period-delimited string to access a deeply-nested object
 Model.getProperty = function(obj, string) {

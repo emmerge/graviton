@@ -5,7 +5,8 @@ Model = function(klass, obj, options) {
 
   this._klass = Model._klasses[klass];
 
-  if (_.isUndefined(this._klass)) throw "Can't find klass '"+klass+"' in:"+JSON.stringify(Model._klasses, null, 2);
+
+  if (_.isUndefined(this._klass)) throw "Can't find klass '"+klass+"'";
 
   if (_.isFunction(options.initialize)) {
     options.initialize.call(this, obj);
@@ -40,7 +41,6 @@ Meteor.startup(function() {
   Model._klasses.users = Meteor.users;
 });
 
-// soaks nulls
 // use a period-delimited string to access a deeply-nested object
 Model.getProperty = function(obj, string) {
   var arr = string.split(".");
@@ -76,7 +76,7 @@ Model.define = function(klass, options) {
   });
 
   var model = function(obj) {
-    var Cls = options.modelCstr || Model;
+    var Cls = options.modelCls || Model;
     return new Cls(klass, obj, options);
   };
 
@@ -97,7 +97,11 @@ Model.define = function(klass, options) {
     });
   }
 
-  collection.build = model;
+  collection.build = function(obj) {
+    var mdl = model(obj);
+    mdl._id = obj._id;
+    return mdl;
+  };
 
   this._klasses[klass] = collection;
 

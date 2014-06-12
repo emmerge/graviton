@@ -171,6 +171,22 @@ Tinytest.add('Relations - belongsTo', function(test) {
 Tinytest.add('Relations - belongsToMany', function(test) {
   test.equal(c.drivers.find().count(), 2);
   test.equal(_.isArray(c.get("driverIds")), true);
+  
+  var driver = c.drivers.findOne();
+  c.drivers.remove(driver);
+  test.equal(c.drivers.find().count(), 1);
+  c.drivers.remove(c.drivers.findOne()._id);
+  test.equal(c.drivers.find().count(), 0);
+
+  c.drivers.toggle({name: "BAMF"});
+  test.equal(c.drivers.find().count(), 1);
+  c.drivers.toggle(c.drivers.findOne());
+  test.equal(c.drivers.find().count(), 0);
+
+  c.drivers.add([{name: "a"}, {name: "b"}, {name: "c"}]);
+  var d = c.drivers.findOne();
+  var cur = c.drivers.find({_id: {$ne: d._id}});
+  test.equal(cur.count(), 2);
 });
 
 Tinytest.add('Relations - embeds', function(test) {

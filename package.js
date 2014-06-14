@@ -4,10 +4,11 @@ Package.describe({
 
 Package.on_use(function (api, where) {
   api.use(["underscore"], ["client", "server"]);
-  api.add_files(['lib/relations.js', 'graviton.js'], ['client', 'server']);
+  api.add_files(['lib/model.js', 'lib/relations.js', 'graviton.js'], ['client', 'server']);
 
   if (typeof api.export !== 'undefined') {
-    api.export("Model", ["client", "server"]);
+    // api.export("Model", ["client", "server"]);
+    api.export("Graviton", ["client", "server"]);
   }
 });
 

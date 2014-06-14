@@ -19,7 +19,7 @@ var allowAll = function(klass) {
   });
 };
 
-Car = Model.Car = Model.define("cars", {
+Car = Graviton.Car = Graviton.define("cars", {
   initialize: function() {
     this.set('price', this.get('price') - 2);
   },
@@ -54,10 +54,10 @@ Car = Model.Car = Model.define("cars", {
 });
 init(Car);
 
-Mfr = Model.define("manufacturers", {});
+Mfr = Graviton.define("manufacturers", {});
 init(Mfr);
 
-Wheel = Model.define("wheels", {
+Wheel = Graviton.define("wheels", {
   defaults: {
     tread: 'new'
   },
@@ -76,10 +76,10 @@ Wheel = Model.define("wheels", {
 });
 init(Wheel);
 
-Rim = Model.define("rims", {});
+Rim = Graviton.define("rims", {});
 init(Rim);
 
-Driver = Model.define("drivers", {
+Driver = Graviton.define("drivers", {
   hasMany: {
     cars: {
       klass: 'cars',
@@ -89,11 +89,11 @@ Driver = Model.define("drivers", {
 });
 init(Driver);
 
-Plate = Model.define("plates", {
+Plate = Graviton.define("plates", {
   persist: false // sends null as mongo collection name to Meteor.Collection
 });
 
-Window = Model.define("windows", {
+Window = Graviton.define("windows", {
   persist: false
 });
 
@@ -135,7 +135,7 @@ c.windows.add([
 
 Tinytest.add('Model - initialize', function(test) {
   test.equal(c.get('price'), 98);
-  test.equal(c._klass._name, 'cars');
+  test.equal(c._collection._name, 'cars');
   test.equal(doc.color, c.attributes.color);
   test.equal(doc.engine.type.cylinders, c.get('engine.type.cylinders'));
 });
@@ -147,11 +147,11 @@ Tinytest.add('Model - defaults', function(test) {
 Tinytest.add('Model - save', function(test) {
   test.equal(_.isString(w._id), true);
   var flat = Wheel.findOne({isFlat: true});
-  test.equal((flat instanceof Model), true);
+  test.equal((flat instanceof Graviton.Model), true);
 });
 
 Tinytest.add('Relations - hasMany', function(test) {
-  test.equal(c.wheels._klass._name, 'wheels');
+  test.equal(c.wheels._collection._name, 'wheels');
   test.equal(c.wheels.find().count(), 4);
   test.equal(c.wheels.all().length, c.wheels.find().count());
   test.equal(c.wheels.find({tread: 'new'}).count(), 3);
@@ -159,7 +159,7 @@ Tinytest.add('Relations - hasMany', function(test) {
 });
 
 Tinytest.add('Relations - hasOne', function(test) {
-  test.isTrue(c.manufacturer() instanceof Model);
+  test.isTrue(c.manufacturer() instanceof Graviton.Model);
   var mfr = Mfr.findOne();
   test.equal(mfr._id, c.manufacturer()._id);
 });
@@ -190,12 +190,12 @@ Tinytest.add('Relations - belongsToMany', function(test) {
 });
 
 Tinytest.add('Relations - embeds', function(test) {
-  test.isTrue(c.plate() instanceof Model);
+  test.isTrue(c.plate() instanceof Graviton.Model);
   test.equal(c.plate().get("code"), "BASFACE");
 });
 
 Tinytest.add('Relations - embedsMany', function(test) {
-  test.isTrue(c.windows.at(0) instanceof Model);
+  test.isTrue(c.windows.at(0) instanceof Graviton.Model);
   test.equal(c.windows.all().length, 4);
   test.equal(c.windows.at(2).get("type"), "frontPassenger");
   test.equal(c.get("windows").length, 4);

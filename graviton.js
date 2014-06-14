@@ -104,6 +104,8 @@ Model.define = function(klass, options) {
   };
 
   this._klasses[klass] = collection;
+  collection._model = model;
+  collection._name = options.name || klass;
 
   return collection;
 };

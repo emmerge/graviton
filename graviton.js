@@ -10,6 +10,20 @@ Meteor.startup(function() {
 // convenience
 Meteor.Collection.prototype.all = ManyRelation.prototype.all;
 
+// does an insert but builds a model first, returns the model instead of an id
+Meteor.Collection.prototype.create = function(obj, callback) {
+  var model = this.build(obj);
+  var id;
+  if (callback) {
+    model.setId(this.insert.call(this, model.attributes, function(err, res) {
+      callback(err, model);
+    }));
+  } else {
+    model.setId(this.insert.call(this, model.attributes));
+  }
+  return model;
+};
+
 // use a period-delimited string to access a deeply-nested object
 Graviton.getProperty = function(obj, string) {
   var arr = string.split(".");
@@ -49,6 +63,8 @@ Graviton.define = function(collectionName, options) {
     return new Cls(collectionName, obj, options);
   };
 
+  options.model = model;
+
   var colName = (options.persist) ? collectionName : null;
 
   var collection = new Meteor.Collection(colName, {
@@ -72,8 +88,7 @@ Graviton.define = function(collectionName, options) {
     return mdl;
   };
   this._collections[collectionName] = collection;
-  collection._model = model;
-  collection._name = options.name || collectionName;
+  collection._graviton = options;
 
   return collection;
 };

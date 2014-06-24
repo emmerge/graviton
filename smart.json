@@ -5,5 +5,7 @@
   "author": "Jeremy Dunn",
   "version": "0.0.2",
   "git": "https://github.com/fractallian/graviton.git",
-  "packages": {}
+  "packages": {
+    "deep-diff": "0.0.1"
+  }
 }

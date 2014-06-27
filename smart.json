@@ -3,7 +3,7 @@
   "description": "Relations and models for Meteor collections",
   "homepage": "https://github.com/fractallian/graviton",
   "author": "Jeremy Dunn",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "git": "https://github.com/fractallian/graviton.git",
   "packages": {
     "deep-diff": "0.0.1"

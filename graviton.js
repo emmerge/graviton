@@ -50,6 +50,8 @@ Graviton.setProperty = function(obj, key, val) {
   }
 };
 
+Graviton.isModel = isModel;
+
 // use this to declare new models
 // options contain the relations etc.
 Graviton.define = function(collectionName, options) {

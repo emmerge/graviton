@@ -1,8 +1,12 @@
+
+var _klasses = [];
+
 var init = function(klass) {
-  allowAll(klass);
   if (Meteor.isServer) {
-    klass.remove({});
+    allowAll(klass);
   }
+  _klasses.push(klass);
+
 };
 
 var allowAll = function(klass) {
@@ -19,7 +23,7 @@ var allowAll = function(klass) {
   });
 };
 
-Car = Graviton.Car = Graviton.define("cars", {
+Car = Graviton.define("cars", {
   initialize: function() {
     this.set('price', this.get('price') - 2);
   },
@@ -97,43 +101,50 @@ Window = Graviton.define("windows", {
   persist: false
 });
 
+////////////// setup
+var doc, c, w;
+var setup = function() {
+  if (Meteor.isServer) {
+    _.each(_klasses, function(klass) {
+      klass.remove({});
+    });
+  }
+  
 
-var doc = {color: 'red', speed: 'fast', price: 100, engine: {type: 'combustion', cylinders: 8}};
-doc._id = Car.insert(doc);
+  doc = {color: 'red', speed: 'fast', price: 100, engine: {type: 'combustion', cylinders: 8}};
+  doc._id = Car.insert(doc);
 
-var c = Car.findOne(doc._id);
-if (Meteor.isClient) window.c = c;
+  c = Car.findOne(doc._id);
 
-c.manufacturer({name: "Audi", location: "Germany"});
+  c.manufacturer({name: "Audi", location: "Germany"});
 
-c.wheels.add({});
-c.wheels.add([{}, {tread: 'worn'}, {}]);
+  c.wheels.add({});
+  c.wheels.add([{}, {tread: 'worn'}, {}]);
 
-var w = Wheel.build({});
-w.save();
+  w = Wheel.build({});
+  w.save();
 
-w.set("isFlat", true);
-w.save();
+  w.set("isFlat", true);
+  w.save();
 
-c.drivers.add({name: "Mario"});
-c.drivers.add({name: "Dale"});
+  c.drivers.add({name: "Mario"});
+  c.drivers.add({name: "Dale"});
 
-c.set("plate", {code: "BASFACE"});
+  c.set("plate", {code: "BASFACE"});
 
-c.windows.add([
-  {type: "windshield"},
-  {type: "frontDriver"},
-  {type: "frontPassenger"},
-  {type: "rear"}
-]);
+  c.windows.add([
+    {type: "windshield"},
+    {type: "frontDriver"},
+    {type: "frontPassenger"},
+    {type: "rear"}
+  ]);
+};
+////////////////////
 
-
-
-
-
-
+setup();
 
 Tinytest.add('Model - initialize', function(test) {
+  setup();
   test.equal(c.get('price'), 98);
   test.equal(c._collection._name, 'cars');
   test.equal(doc.color, c.attributes.color);
@@ -141,34 +152,43 @@ Tinytest.add('Model - initialize', function(test) {
 });
 
 Tinytest.add('Model - defaults', function(test) {
+  setup();
   test.equal(w.get("tread"), "new");
 });
 
 Tinytest.add('Model - save', function(test) {
+  setup();
   test.equal(_.isString(w._id), true);
   var flat = Wheel.findOne({isFlat: true});
   test.equal((flat instanceof Graviton.Model), true);
 });
 
 Tinytest.add('Relations - hasMany', function(test) {
+  setup();
   test.equal(c.wheels._collection._name, 'wheels');
   test.equal(c.wheels.find().count(), 4);
   test.equal(c.wheels.all().length, c.wheels.find().count());
   test.equal(c.wheels.find({tread: 'new'}).count(), 3);
-  test.equal(Driver.findOne().cars.findOne()._id, c._id);
+  test.equal(c.drivers.findOne().cars.find().count(), 1);
 });
 
 Tinytest.add('Relations - hasOne', function(test) {
+  setup();
   test.isTrue(c.manufacturer() instanceof Graviton.Model);
-  var mfr = Mfr.findOne();
+  var mfr = Mfr.findOne({carId: c._id});
   test.equal(mfr._id, c.manufacturer()._id);
 });
 
 Tinytest.add('Relations - belongsTo', function(test) {
+  setup();
   test.equal(c.wheels.findOne().car()._id, c._id);
 });
 
 Tinytest.add('Relations - belongsToMany', function(test) {
+  setup();
+  if (c.drivers.find().count() != 2) {
+    console.log(c.drivers.find().fetch());
+  }
   test.equal(c.drivers.find().count(), 2);
   test.equal(_.isArray(c.get("driverIds")), true);
   
@@ -187,16 +207,51 @@ Tinytest.add('Relations - belongsToMany', function(test) {
   var d = c.drivers.findOne();
   var cur = c.drivers.find({_id: {$ne: d._id}});
   test.equal(cur.count(), 2);
+
 });
 
 Tinytest.add('Relations - embeds', function(test) {
+  setup();
   test.isTrue(c.plate() instanceof Graviton.Model);
   test.equal(c.plate().get("code"), "BASFACE");
 });
 
 Tinytest.add('Relations - embedsMany', function(test) {
+  setup();
   test.isTrue(c.windows.at(0) instanceof Graviton.Model);
   test.equal(c.windows.all().length, 4);
   test.equal(c.windows.at(2).get("type"), "frontPassenger");
   test.equal(c.get("windows").length, 4);
  });
+
+
+////////
+
+var Mdl = Graviton.Model.extend({});
+var SubMdl = Mdl.extend({});
+
+var Raw = Graviton.define('raw', {persist: false});
+var Col = Graviton.define('col', {modelCls: Mdl, persist: false});
+var SubCol = Graviton.define('sub', {modelCls: SubMdl, persist: false});
+
+var r = Raw.build({});
+var m = Col.build({});
+var s = SubCol.build({});
+
+
+Tinytest.add('Model - isModel', function(test) {
+  test.isTrue(Graviton.isModel(r));
+  test.isTrue(Graviton.isModel(m));
+  test.isTrue(Graviton.isModel(s));
+  test.isFalse(Graviton.isModel({}));
+  test.isFalse(Graviton.isModel([]));
+  test.isFalse(Graviton.isModel("xxx"));
+  test.isFalse(Graviton.isModel(234));
+  test.isFalse(Graviton.isModel(_));
+  test.isFalse(Graviton.isModel(Graviton));
+});
+
+
+
+
+

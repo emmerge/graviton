@@ -222,6 +222,12 @@ Tinytest.add('Relations - embedsMany', function(test) {
   test.equal(c.windows.all().length, 4);
   test.equal(c.windows.at(2).get("type"), "frontPassenger");
   test.equal(c.get("windows").length, 4);
+  var w = c.windows.at(2);
+  test.equal(c.windows.indexOf(w), 2);
+  test.equal(c.windows.indexOf({}), -1);
+
+  c.windows.remove(w);
+  test.equal(c.windows.all().length, 3);
  });
 
 

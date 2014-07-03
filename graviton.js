@@ -87,6 +87,7 @@ Graviton.define = function(collectionName, options) {
   }
 
   collection.build = function(obj) {
+    if (!_.isObject(obj)) obj = {};
     var mdl = model(obj);
     mdl._id = obj._id;
     return mdl;

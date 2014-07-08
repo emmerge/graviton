@@ -201,8 +201,8 @@ testAsyncMulti('Model.prototype - save async', [
     var c = Car.build({color: 'chrome'});
     c.set('color', 'rust');
     var r = c.save(expect(function(err, res) {
-      // test.equal(res, 1);
-      // test.isFalse(err);
+      test.equal(res, 1);
+      test.isFalse(err);
     }));
   }
 ]);

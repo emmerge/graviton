@@ -10,6 +10,13 @@ Meteor.startup(function() {
 // convenience
 Meteor.Collection.prototype.all = ManyRelation.prototype.all;
 
+Meteor.Collection.prototype.build = function(obj) {
+  if (!_.isObject(obj)) obj = {};
+  var mdl = this._graviton.model(obj);
+  mdl._id = obj._id;
+  return mdl;
+};
+
 // does an insert but builds a model first, returns the model instead of an id
 Meteor.Collection.prototype.create = function(obj, callback) {
   var model = this.build(obj);
@@ -52,6 +59,22 @@ Graviton.setProperty = function(obj, key, val) {
 
 Graviton.isModel = isModel;
 
+var getModelCls = function(options, type) {
+  var cls;
+  if (type) {
+    if (!options.modelCls) throw new Error("Model _type was specified but no modelCls was provided");
+    if (_.isFunction(options.modelCls)) {
+      cls = options.modelCls(type);
+    } else if (_.isObject(options.modelCls)) {
+      cls = options.modelCls[type];
+    }
+  } else {
+    cls = options.modelCls || Graviton.Model;
+  }
+  if (!_.isFunction(cls)) console.log(obj, cls); //throw new Error("modelCls is not a function");
+  return cls;
+};
+
 // use this to declare new models
 // options contain the relations etc.
 Graviton.define = function(collectionName, options) {
@@ -60,17 +83,17 @@ Graviton.define = function(collectionName, options) {
     persist: true
   });
 
-  var model = function(obj) {
-    var Cls = options.modelCls || Graviton.Model;
+  options.model = function(obj) {
+    var Cls = getModelCls(options, Graviton.getProperty(options, 'defaults._type'));
     return new Cls(collectionName, obj, options);
   };
 
-  options.model = model;
+  // options.model = model;
 
   var colName = (options.persist) ? collectionName : null;
 
   var collection = new Meteor.Collection(colName, {
-    transform: model
+    transform: options.model
   });
 
   // uses collection-hooks package
@@ -86,12 +109,9 @@ Graviton.define = function(collectionName, options) {
     });
   }
 
-  collection.build = function(obj) {
-    if (!_.isObject(obj)) obj = {};
-    var mdl = model(obj);
-    mdl._id = obj._id;
-    return mdl;
-  };
+  // collection.build = function(obj) {
+    
+  // };
   this._collections[collectionName] = collection;
   collection._graviton = options;
 
@@ -100,3 +120,5 @@ Graviton.define = function(collectionName, options) {
 
 // alias
 Graviton.defineCollection = Graviton.define;
+
+

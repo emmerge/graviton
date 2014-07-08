@@ -6,6 +6,6 @@
   "version": "0.0.3",
   "git": "https://github.com/fractallian/graviton.git",
   "packages": {
-    "deep-diff": "0.0.1"
+    "async": "0.2.9.3"
   }
 }

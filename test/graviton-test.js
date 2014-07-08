@@ -9,7 +9,7 @@ var init = function(klass) {
 
 };
 
-var allowAll = function(klass) {
+allowAll = function(klass) {
   klass.allow({
     insert: function(userId, model) {
       return true;
@@ -143,25 +143,25 @@ var setup = function() {
 
 setup();
 
-Tinytest.add('Model - initialize', function(test) {
-  setup();
-  test.equal(c.get('price'), 98);
-  test.equal(c._collection._name, 'cars');
-  test.equal(doc.color, c.attributes.color);
-  test.equal(doc.engine.type.cylinders, c.get('engine.type.cylinders'));
-});
+// Tinytest.add('Model - initialize', function(test) {
+//   setup();
+//   test.equal(c.get('price'), 98);
+//   test.equal(c._collection._name, 'cars');
+//   test.equal(doc.color, c.attributes.color);
+//   test.equal(doc.engine.type.cylinders, c.get('engine.type.cylinders'));
+// });
 
-Tinytest.add('Model - defaults', function(test) {
-  setup();
-  test.equal(w.get("tread"), "new");
-});
+// Tinytest.add('Model - defaults', function(test) {
+//   setup();
+//   test.equal(w.get("tread"), "new");
+// });
 
-Tinytest.add('Model - save', function(test) {
-  setup();
-  test.equal(_.isString(w._id), true);
-  var flat = Wheel.findOne({isFlat: true});
-  test.equal((flat instanceof Graviton.Model), true);
-});
+// Tinytest.add('Model - save', function(test) {
+//   setup();
+//   test.equal(_.isString(w._id), true);
+//   var flat = Wheel.findOne({isFlat: true});
+//   test.equal((flat instanceof Graviton.Model), true);
+// });
 
 Tinytest.add('Relations - hasMany', function(test) {
   setup();
@@ -245,17 +245,7 @@ var m = Col.build({});
 var s = SubCol.build({});
 
 
-Tinytest.add('Model - isModel', function(test) {
-  test.isTrue(Graviton.isModel(r));
-  test.isTrue(Graviton.isModel(m));
-  test.isTrue(Graviton.isModel(s));
-  test.isFalse(Graviton.isModel({}));
-  test.isFalse(Graviton.isModel([]));
-  test.isFalse(Graviton.isModel("xxx"));
-  test.isFalse(Graviton.isModel(234));
-  test.isFalse(Graviton.isModel(_));
-  test.isFalse(Graviton.isModel(Graviton));
-});
+
 
 
 

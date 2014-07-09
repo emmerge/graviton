@@ -227,3 +227,28 @@ addTest('Model.prototype - push', function(test) {
   var mod = _.last(c._pendingMods);
   test.equal(mod, {$push: {drivers: 'Luigi', 'flaws.scratches': {$each: ['door', 'bumper', 'hood']}}});
 });
+
+addTest('Model.prototype - pop', function(test) {
+  var c = Car.build({
+    drivers: ['Mario', 'Luigi'],
+    flaws: {
+      scratches: ['hood', 'door', 'bumper']
+    }
+  });
+  c.pop('drivers', 'flaws.scratches');
+  test.equal(c._pendingMods[0], {$pop: {drivers: 1, 'flaws.scratches': 1}});
+  test.equal(c.get('flaws.scratches'), ['hood', 'door']);
+});
+
+addTest('Model.prototype - shift', function(test) {
+  var c = Car.build({
+    drivers: ['Mario', 'Luigi'],
+    flaws: {
+      scratches: ['hood', 'door', 'bumper']
+    }
+  });
+  c.shift('drivers', 'flaws.scratches');
+  test.equal(c._pendingMods[0], {$pop: {drivers: -1, 'flaws.scratches': -1}});
+  test.equal(c.get('flaws.scratches'), ['door', 'bumper']);
+});
+

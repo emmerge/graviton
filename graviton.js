@@ -22,11 +22,11 @@ Meteor.Collection.prototype.create = function(obj, callback) {
   var model = this.build(obj);
   var id;
   if (callback) {
-    model.setId(this.insert.call(this, model.attributes, function(err, res) {
+    model.setId(this.insert(model.attributes, function(err, res) {
       callback(err, model);
     }));
   } else {
-    model.setId(this.insert.call(this, model.attributes));
+    model.setId(this.insert(model.attributes));
   }
   return model;
 };

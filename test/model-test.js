@@ -206,3 +206,24 @@ testAsyncMulti('Model.prototype - save async', [
     }));
   }
 ]);
+
+addTest('Model.prototype - push', function(test) {
+  var c = Car.build({
+    drivers: [],
+    flaws: {
+      scratches: []
+    }
+  });
+  c.push('drivers', 'Mario');
+  test.equal(['Mario'], c.get('drivers'));
+  test.equal(c._pendingMods, [{$push: {drivers: 'Mario'}}]);
+
+  c.push({
+    'flaws.scratches': ['door', 'bumper', 'hood'],
+    drivers: 'Luigi'
+  });
+
+  test.equal(c.get('flaws.scratches').length, 3);
+  var mod = _.last(c._pendingMods);
+  test.equal(mod, {$push: {drivers: 'Luigi', 'flaws.scratches': {$each: ['door', 'bumper', 'hood']}}});
+});

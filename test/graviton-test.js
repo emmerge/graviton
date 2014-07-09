@@ -10,17 +10,20 @@ var init = function(klass) {
 };
 
 allowAll = function(klass) {
-  klass.allow({
-    insert: function(userId, model) {
-      return true;
-    },
-    update: function (userId, doc, fields, modifier) {
-      return true;
-    },
-    remove: function (userId, doc) {
-      return true;
-    }
-  });
+  if (Meteor.isServer) {
+    console.log("allowing", klass);
+    klass.allow({
+      insert: function(userId, model) {
+        return true;
+      },
+      update: function (userId, doc, fields, modifier) {
+        return true;
+      },
+      remove: function (userId, doc) {
+        return true;
+      }
+    });
+  }
 };
 
 Car = Graviton.define("cars", {
@@ -143,25 +146,7 @@ var setup = function() {
 
 setup();
 
-// Tinytest.add('Model - initialize', function(test) {
-//   setup();
-//   test.equal(c.get('price'), 98);
-//   test.equal(c._collection._name, 'cars');
-//   test.equal(doc.color, c.attributes.color);
-//   test.equal(doc.engine.type.cylinders, c.get('engine.type.cylinders'));
-// });
 
-// Tinytest.add('Model - defaults', function(test) {
-//   setup();
-//   test.equal(w.get("tread"), "new");
-// });
-
-// Tinytest.add('Model - save', function(test) {
-//   setup();
-//   test.equal(_.isString(w._id), true);
-//   var flat = Wheel.findOne({isFlat: true});
-//   test.equal((flat instanceof Graviton.Model), true);
-// });
 
 Tinytest.add('Relations - hasMany', function(test) {
   setup();
@@ -230,19 +215,6 @@ Tinytest.add('Relations - embedsMany', function(test) {
   test.equal(c.windows.all().length, 3);
  });
 
-
-////////
-
-var Mdl = Graviton.Model.extend({});
-var SubMdl = Mdl.extend({});
-
-var Raw = Graviton.define('raw', {persist: false});
-var Col = Graviton.define('col', {modelCls: Mdl, persist: false});
-var SubCol = Graviton.define('sub', {modelCls: SubMdl, persist: false});
-
-var r = Raw.build({});
-var m = Col.build({});
-var s = SubCol.build({});
 
 
 

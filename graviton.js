@@ -85,7 +85,9 @@ Graviton.define = function(collectionName, options) {
   options = _.pick(options, 
     'persist', 
     'modelCls', 
-    'defaultType'
+    'defaultType',
+    'timestamps',
+    'name'
   );
 
   _.defaults(options, {

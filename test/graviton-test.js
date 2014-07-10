@@ -32,10 +32,16 @@ Car = Graviton.define("cars", {
       this.set('price', this.get('price') - 2);
     }
   }),
-  hasMany: {
-    wheels: {
-      klass: 'wheels',
-      foreignKey: 'carId'
+  belongsTo: {
+    owner: {
+      klass: 'people',
+      foreignKey: 'ownerId'
+    }
+  },
+  belongsToMany: {
+    drivers: {
+      klass: 'drivers',
+      field: 'driverIds'
     }
   },
   hasOne: {
@@ -44,10 +50,10 @@ Car = Graviton.define("cars", {
       foreignKey: 'carId'
     }
   },
-  belongsToMany: {
-    drivers: {
-      klass: 'drivers',
-      field: 'driverIds'
+  hasMany: {
+    wheels: {
+      klass: 'wheels',
+      foreignKey: 'carId'
     }
   },
   embeds: {

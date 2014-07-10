@@ -7,12 +7,20 @@ Allows you to:
 
 * Define relationships between collections.
 * Traverse and retrieve related models.
-* Tansform your mongo docs into models with instance properties and functions.
+* Tansform your mongo docs into models with attributes and methods.
 * Use other mrt packages to handle validation (meteor-simple-schema) hooks (meteor-collection-hooks) and relational pub/sub (reactive-relations).
  
-Similar to minimongoid but instead of extending a model class with coffeescript, use Model.define to create a Meteor.Collection with a transform option that converts all documents into your models wih your custom properties and methods for accessing related models.
+Collections defined with Graviton automatically convert retreieved objects into models. You specify the type(s) when define the collection. Passing {transform: null} to find() etc. will bypass model transformation. The raw document is stored in model.attributes. Use built-in transformation methods like set, push, pop to make changes to your model locally. Call model.save() to persist changes to the database. All methods work on both server and client.
 
-The raw document is stored in model.attributes and the un-transformed model can be accessed via model.plain()
+# API Docs
+
+## Meteor.Collection.prototype
+The following is added to all your meteor collections:
+* `all` alias to find().fetch()
+* `build` returns a new local Gravition.Model based on your collection definition. Does not save to db.
+* `create` calls `build` to generate a Model then inserts it into the db.
+
+## Graviton
 
 # Example
 

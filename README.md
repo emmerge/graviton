@@ -33,9 +33,66 @@ The following are added to all your meteor collections:
 
 * `Graviton.getProperty(key)` Use to access deeply-nested attributes without worry of throwing errors. Use period-delimited strings as keys. For example: `var obj = {}; Gravition.getPropery({}, 'some.deep.nested.prop')` would simply return undefined instead of throwing an error because obj.some is undefined. This method works best with keys that are meant to be stored in mongo since periods are not allowed in them.
 * `Graviton.setProperty(thing, [value])` Set deeply-nested attributes. Example: `var obj = {}; Gravition.setProperty(obj, 'some.deeply.nested.prop', 'hello')` would result in `{some: {deeply: {nested: {prop: 'hello'}}}}` You can pass an object instead of key, value to set several at once.
+* `Graviton.isModel(obj)` Use to check if an object is a model.
 
 ## Relations
-* hasMany
+Pass the following as keys to Graviton.define do declare relationships with other collections. Emample: 
+```
+Car = Graviton.define("cars", {
+  belongsTo: {
+    owner: {
+      klass: 'people',
+      foreignKey: 'ownerId'
+    }
+  },
+  belongsToMany: {
+    drivers: {
+      klass: 'drivers',
+      field: 'driverIds'
+    }
+  },
+  hasOne: {
+    manufacturer: {
+      klass: 'manufacturers',
+      foreignKey: 'carId'
+    }
+  },
+  hasMany: {
+    wheels: {
+      klass: 'wheels',
+      foreignKey: 'carId'
+    }
+  },
+  embeds: {
+    plate: {
+      klass: 'plates'
+    }
+  },
+  embedsMany: {
+    windows: {
+      klass: 'windows'
+    }
+  }
+});
+```
+Would make the following possible:
+```
+var car = Car.findOne();
+car.owner(); // returns a model
+car.owner(person); // sets the ownerId of person
+
+car.wheels.find(); // returns a cursor. same as Wheel.find({carId: car._id})
+car.wheels.add({}); // insert a document into the wheels collection with carId = car._id
+
+car.drivers.find(); // returns a cursor. same as Driver.find({_id: {$in: car.get('driverIds')}})
+
+car.manufacturer();
+car.plate();
+
+// embedded models don't have the same finder capability since they aren't kept in minimongo
+car.windows.all(); // returns all models
+car.windows.at(2); // only builds one model
+```
 
 ## Graviton.Model
 

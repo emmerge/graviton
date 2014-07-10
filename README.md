@@ -35,6 +35,7 @@ The following are added to all your meteor collections:
 * `Graviton.setProperty(thing, [value])` Set deeply-nested attributes. Example: `var obj = {}; Gravition.setProperty(obj, 'some.deeply.nested.prop', 'hello')` would result in `{some: {deeply: {nested: {prop: 'hello'}}}}` You can pass an object instead of key, value to set several at once.
 
 ## Relations
+* hasMany
 
 ## Graviton.Model
 

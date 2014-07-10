@@ -27,9 +27,11 @@ allowAll = function(klass) {
 };
 
 Car = Graviton.define("cars", {
-  initialize: function() {
-    this.set('price', this.get('price') - 2);
-  },
+  modelCls: Graviton.Model.extend({
+    initialize: function() {
+      this.set('price', this.get('price') - 2);
+    }
+  }),
   hasMany: {
     wheels: {
       klass: 'wheels',
@@ -65,9 +67,11 @@ Mfr = Graviton.define("manufacturers", {});
 init(Mfr);
 
 Wheel = Graviton.define("wheels", {
-  defaults: {
-    tread: 'new'
-  },
+  modelCls: Graviton.Model.extend({
+    defaults: {
+      tread: 'new'
+    }
+  }),
   belongsTo: {
     car: {
       klass: 'cars',
@@ -171,9 +175,6 @@ Tinytest.add('Relations - belongsTo', function(test) {
 
 Tinytest.add('Relations - belongsToMany', function(test) {
   setup();
-  if (c.drivers.find().count() != 2) {
-    console.log(c.drivers.find().fetch());
-  }
   test.equal(c.drivers.find().count(), 2);
   test.equal(_.isArray(c.get("driverIds")), true);
   

@@ -59,36 +59,50 @@ Graviton.setProperty = function(obj, key, val) {
 
 Graviton.isModel = isModel;
 
-var getModelCls = function(options, type) {
-  var cls;
-  if (type) {
-    if (!options.modelCls) throw new Error("Model _type was specified but no modelCls was provided");
-    if (_.isFunction(options.modelCls)) {
-      cls = options.modelCls(type);
-    } else if (_.isObject(options.modelCls)) {
-      cls = options.modelCls[type];
+var getModelCls = function(obj, options) {
+  if (_.isFunction(options.modelCls)) return options.modelCls;
+  if (_.isObject(options.modelCls)) {
+    var type = obj._type || options.defaultType;
+    if (type) {
+      return options.modelCls[type];
     }
-  } else {
-    cls = options.modelCls || Graviton.Model;
   }
-  if (!_.isFunction(cls)) console.log(obj, cls); //throw new Error("modelCls is not a function");
-  return cls;
+  return Graviton.Model;
 };
 
 // use this to declare new models
 // options contain the relations etc.
 Graviton.define = function(collectionName, options) {
+  // var modelOpts = _.pick(options,
+  //   'defaults',
+  //   'initialize'
+  // );
+
+  var relations = _.pick(options,
+    'belongsTo',
+    'belongsToMany',
+    'hasOne',
+    'hasMany',
+    'embeds',
+    'embedsMany'
+  );
+
+  options = _.pick(options, 
+    'persist', 
+    'modelCls', 
+    'defaultType'
+  );
 
   _.defaults(options, {
     persist: true
   });
 
-  options.model = function(obj) {
-    var Cls = getModelCls(options, Graviton.getProperty(options, 'defaults._type'));
-    return new Cls(collectionName, obj, options);
-  };
+  options.relations = relations;
 
-  // options.model = model;
+  options.model = function(obj) {
+    var Cls = getModelCls(obj, options);
+    return new Cls(collectionName, obj);
+  };
 
   var colName = (options.persist) ? collectionName : null;
 
@@ -109,9 +123,6 @@ Graviton.define = function(collectionName, options) {
     });
   }
 
-  // collection.build = function(obj) {
-    
-  // };
   this._collections[collectionName] = collection;
   collection._graviton = options;
 

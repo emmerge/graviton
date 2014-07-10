@@ -1,6 +1,10 @@
 var CarModel = Graviton.Model.extend({
   defaults: {
     isRunning: false
+  },
+  initialize: function() {
+    this.volume = 5;
+    this.speed = 11;
   }
 }, {
   start: function() {
@@ -13,11 +17,13 @@ var CarModel = Graviton.Model.extend({
   }
 });
 
-var ElectricCarModel = Graviton.Model.extend({
+var ElectricCarModel = CarModel.extend({
   defaults: {
-    isCharged: false
+    isCharged: false,
+    make: 'Tesla'
   },
   initialize: function() {
+    this._super.initialize.call(this);
     this.volume = 0;
   }
 }, {
@@ -35,14 +41,24 @@ var ElectricCarModel = Graviton.Model.extend({
   }
 });
 
+var FlyingElectricCarModel = ElectricCarModel.extend({
+  defaults: {
+    make: 'Future',
+    hasWings: true
+  }
+}, {
+  launch: function() {
+    this.set('isFlying', true);
+  }
+});
+
 var Car = Graviton.define('model-server-cars', {
   modelCls: {
     gas: CarModel,
-    electric: ElectricCarModel
+    electric: ElectricCarModel,
+    flying: FlyingElectricCarModel
   },
-  defaults: {
-    _type: 'gas'
-  }
+  defaultType: 'gas'
 });
 allowAll(Car);
 
@@ -64,6 +80,24 @@ Tinytest.add('Collection - build', function(test) {
   c = Car.build({color: 'red'});
   test.equal(c.get('color'), 'red');
 });
+
+Tinytest.add('Model - inheritance', function(test) {
+  var fcar = Car.build({_type: 'flying'});
+  test.equal(fcar.get('hasWings'), true);
+  test.isUndefined(fcar.volume); // we didn't supply an initialize
+  test.isTrue(_.isFunction(fcar.stop));
+});
+
+Tinytest.add('Collection - polymorphic', function(test) {
+  var c = Car.build();
+  var ec = Car.build({_type: 'electric'});
+  test.isTrue(_.isFunction(ec.charge));
+  test.equal(ec.get('make'), 'Tesla');
+  test.isUndefined(c.charge);
+  test.equal(ec.volume, 0);
+  test.equal(ec.speed, 11); 
+});
+
 
 Tinytest.add('Graviton - isModel', function(test) {
   var c = Car.build();

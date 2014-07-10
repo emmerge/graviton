@@ -15,12 +15,16 @@ Collections defined with Graviton automatically convert retreieved objects into 
 # API Docs
 
 ## Meteor.Collection.prototype
-The following is added to all your meteor collections:
-* `all` alias to find().fetch()
-* `build` returns a new local Gravition.Model based on your collection definition. Does not save to db.
-* `create` calls `build` to generate a Model then inserts it into the db.
+The following are added to all your meteor collections:
+* `all()` alias to find().fetch()
+* `build()` returns a new local Gravition.Model based on your collection definition. Does not save to db.
+* `create()` calls build() to generate a Model then inserts it into the db.
 
 ## Graviton
+* `define(collectionName, options)` Use to define your collections. Returns a Meteor.Collection instantiated with a transform function based on the options passed.
+  Options:
+    * `persist` passing false will define a local collection. default=true
+    * 
 
 # Example
 

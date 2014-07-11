@@ -232,12 +232,16 @@ addTest('Model.prototype - save', function(test) {
 
 testAsyncMulti('Model.prototype - save async', [
   function(test, expect) {
-    var c = Car.build({color: 'chrome'});
-    c.set('color', 'rust');
-    var r = c.save(expect(function(err, res) {
-      test.equal(res, 1);
-      test.isFalse(err);
-    }));
+    var c = Car.create({color: 'chrome'}, function(err, res) {
+      c.set('color', 'rust');
+      var r = c.save(expect(function(err, res) {
+        test.equal(res, 1);
+        test.isFalse(err);
+        test.equal(c.get('color'), 'rust');
+        test.equal(Car.findOne(c._id).get('color'), 'rust');
+      }));
+    });
+    
   }
 ]);
 

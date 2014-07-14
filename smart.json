@@ -1,10 +1,10 @@
 {
   "name": "graviton",
   "description": "Relations and models for Meteor collections",
-  "homepage": "https://github.com/fractallian/graviton",
+  "homepage": "https://github.com/thredder/graviton",
   "author": "Jeremy Dunn",
   "version": "0.0.3",
-  "git": "https://github.com/fractallian/graviton.git",
+  "git": "https://github.com/thredder/graviton.git",
   "packages": {
     "async": "0.2.9.3"
   }

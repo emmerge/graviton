@@ -62,7 +62,7 @@ Graviton.isModel = isModel;
 var getModelCls = function(obj, options) {
   if (_.isFunction(options.modelCls)) return options.modelCls;
   if (_.isObject(options.modelCls)) {
-    var type = obj._type || options.defaultType;
+    var type = ((options.typeAttribute) ? obj[options.typeAttribute] : obj._type) || options.defaultType;
     if (type) {
       return options.modelCls[type];
     }
@@ -83,9 +83,10 @@ Graviton.define = function(collectionName, options) {
   );
 
   options = _.pick(options, 
-    'persist', 
-    'modelCls', 
-    'defaultType',
+    'persist', // if false, is backed by a local collection only
+    'modelCls', // either model constructor or object containing model constructors
+    'defaultType', // used only when modelCls is an object
+    'typeAttribute', // attribute to use for type instead of _type
     'timestamps',
     'name'
   );

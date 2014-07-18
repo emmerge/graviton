@@ -64,6 +64,7 @@ var getModelCls = function(obj, options) {
   if (_.isObject(options.modelCls)) {
     var type = ((options.typeAttribute) ? obj[options.typeAttribute] : obj._type) || options.defaultType;
     if (type) {
+      if (!options.modelCls[type]) throw new Error("Model class for type '"+type+"' was not found. Can't build model.");
       return options.modelCls[type];
     }
   }

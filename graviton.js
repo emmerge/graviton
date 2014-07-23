@@ -57,6 +57,30 @@ Graviton.setProperty = function(obj, key, val) {
   }
 };
 
+Graviton.sanitizeKeysForMongo = function(obj) {
+  var nk;
+  for (var k in obj) {
+    if (_.isObject(obj[k])) Graviton.sanitizeKeysForMongo(obj[k]);
+    nk = k;
+    if (/^\#/.test(nk)) {
+      nk = '##'+nk.substr(1);
+    }
+    if (/^\$/.test(nk)) {
+      nk = '#'+nk.substr(1);
+    }
+    if (/\@/.test(nk)) {
+      nk = nk.replace(/\@/g, '@@')
+    }
+    if (/\./.test(nk)) {
+      nk = nk.replace(/\./g, '@');
+    }
+    if (nk !== k) {
+      obj[nk] = obj[k];
+      delete obj[k];
+    }
+  }
+};
+
 Graviton.isModel = isModel;
 
 var getModelCls = function(obj, options) {

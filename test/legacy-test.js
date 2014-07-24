@@ -1,3 +1,5 @@
+// This tests the old method of defining relations on collections (vs. models)
+// This functionality (and tests) will go away soon
 
 var _klasses = [];
 
@@ -7,23 +9,6 @@ var init = function(klass) {
   }
   _klasses.push(klass);
 
-};
-
-allowAll = function(klass) {
-  if (Meteor.isServer) {
-    console.log("allowing", klass);
-    klass.allow({
-      insert: function(userId, model) {
-        return true;
-      },
-      update: function (userId, doc, fields, modifier) {
-        return true;
-      },
-      remove: function (userId, doc) {
-        return true;
-      }
-    });
-  }
 };
 
 Car = Graviton.define("cars", {
@@ -114,6 +99,9 @@ Window = Graviton.define("windows", {
   persist: false
 });
 
+Person = Graviton.define("people");
+init(Person);
+
 ////////////// setup
 var doc, c, w;
 var setup = function() {
@@ -158,7 +146,7 @@ setup();
 
 
 
-Tinytest.add('Relations - hasMany', function(test) {
+Tinytest.add('Legacy Relations - hasMany', function(test) {
   setup();
   test.equal(c.wheels._collection._name, 'wheels');
   test.equal(c.wheels.find().count(), 4);
@@ -167,19 +155,19 @@ Tinytest.add('Relations - hasMany', function(test) {
   test.equal(c.drivers.findOne().cars.find().count(), 1);
 });
 
-Tinytest.add('Relations - hasOne', function(test) {
+Tinytest.add('Legacy Relations - hasOne', function(test) {
   setup();
   test.isTrue(c.manufacturer() instanceof Graviton.Model);
   var mfr = Mfr.findOne({carId: c._id});
   test.equal(mfr._id, c.manufacturer()._id);
 });
 
-Tinytest.add('Relations - belongsTo', function(test) {
+Tinytest.add('Legacy Relations - belongsTo', function(test) {
   setup();
   test.equal(c.wheels.findOne().car()._id, c._id);
 });
 
-Tinytest.add('Relations - belongsToMany', function(test) {
+Tinytest.add('Legacy Relations - belongsToMany', function(test) {
   setup();
   test.equal(c.drivers.find().count(), 2);
   test.equal(_.isArray(c.get("driverIds")), true);
@@ -202,13 +190,13 @@ Tinytest.add('Relations - belongsToMany', function(test) {
 
 });
 
-Tinytest.add('Relations - embeds', function(test) {
+Tinytest.add('Legacy Relations - embeds', function(test) {
   setup();
   test.isTrue(c.plate() instanceof Graviton.Model);
   test.equal(c.plate().get("code"), "BASFACE");
 });
 
-Tinytest.add('Relations - embedsMany', function(test) {
+Tinytest.add('Legacy Relations - embedsMany', function(test) {
   setup();
   test.isTrue(c.windows.at(0) instanceof Graviton.Model);
   test.equal(c.windows.all().length, 4);
@@ -221,12 +209,3 @@ Tinytest.add('Relations - embedsMany', function(test) {
   c.windows.remove(w);
   test.equal(c.windows.all().length, 3);
  });
-
-
-
-
-
-
-
-
-

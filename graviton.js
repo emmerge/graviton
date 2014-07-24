@@ -98,6 +98,8 @@ var getModelCls = function(obj, options) {
 // use this to declare new models
 // options contain the relations etc.
 Graviton.define = function(collectionName, options) {
+  if (!options) options = {};
+
   var relations = _.pick(options,
     'belongsTo',
     'belongsToMany',

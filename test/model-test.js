@@ -135,7 +135,7 @@ Tinytest.add('Model - relation inheritance', function(test) {
   fcar.drivers.add();
   test.equal(fcar.batteries.find().count(), 1);
   test.equal(fcar.drivers.find().count(), 1);
-})
+});
 
 Tinytest.add('Model - inheritance', function(test) {
   var fcar = Car.build({_type: 'flying'});

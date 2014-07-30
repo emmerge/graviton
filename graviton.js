@@ -43,6 +43,7 @@ Graviton.getProperty = function(obj, string) {
 };
 
 Graviton.setProperty = function(obj, key, val) {
+  if (!key) throw new Error("Cannot setProperty with no key specified.");
   var arr = key.split(".");
   while (obj && arr.length > 1) {
     key = arr.shift();

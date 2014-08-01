@@ -36,9 +36,17 @@ The following are added to all your meteor collections:
 * `Graviton.isModel(obj)` Use to check if an object is a model.
 
 ## Relations
+
+* belongsTo:
+* belongsToMany:
+* hasOne:
+* hasMany:
+* embeds:
+* embedsMany:
+
 Pass the following as keys to Graviton.define do declare relationships with other collections. Emample: 
 ```
-Car = Graviton.define("cars", {
+CarModel = Graviton.model.extend({
   belongsTo: {
     owner: {
       klass: 'people',
@@ -52,6 +60,7 @@ Car = Graviton.define("cars", {
     }
   },
   hasOne: {
+    // note that manufacturer should really be a belongsTo relationship since manufacturer shouldn't have a single carId
     manufacturer: {
       klass: 'manufacturers',
       foreignKey: 'carId'
@@ -73,6 +82,10 @@ Car = Graviton.define("cars", {
       klass: 'windows'
     }
   }
+},{});
+
+Car = Graviton.define("cars", {
+  modelCls: CarModel
 });
 ```
 Would make the following possible:
@@ -96,9 +109,56 @@ car.windows.at(2); // only builds one model
 
 ## Graviton.Model
 
+Graviton transforms collection objects into Models for you. This allows them to carry useful metadata and functions with the data. The vanilla Graviton.Model allows for basic functionality. Defining an extension of the Graviton.Model allows you to specify details of the collection's relationships or other custom functionality.
+
+* `Graviton.Model.extend({Options}, {ExtensionPrototype});` Use to define your collections. Returns a Meteor.Collection instantiated with a transform function based on the options passed.
+
+  *Options*
+    * `defaults`: an object containing default key:value pairs for the collection. These key:values will be added to all model instances where there is not already a stored value with the same key. Functions should not be placed here as stored records cannot have functions as values.
+    * `initialize`: a function which will be run on initialization.
+    * _relationships_: define how this model relates to other collections. `belongsTo`, `belongsToMany`, `hasOne`, `hasMany`, etc.
+  *ExtensionPrototype*
+    * This object contains the extension prototype. This is the place to add functions to the model. Values could also be placed here if they relate to this specific model. These do not behave as attributes - any values placed here will not be stored.
+      
+
+
+
 # Example
 
-coming soon
+## full app example
 
+Graviscope - a graviton version of the Microscope app built in the book Discover Meteor
+
+## Working with relations
+
+### `Model.hasMany.add()` example (simplified from graviscope)
+
+```
+PostModel = Graviton.Model.extend({
+  hasMany: {
+    comments: {
+      collection: 'comments',
+      foreignKey: 'postId'
+    }
+  }
+},{};
+
+Posts = Graviton.define('posts', {
+  modelCls: PostModel
+});
+```
+
+```
+post = Posts.findOne();
+comment = Comments.build();
+comment.set({author:'Steve', body:'Check out the Posts.hasMany.comments relationship.'})
+post.comments.add(comment);
+console.log('Newly created comment id', comment._id);
+```
+
+### `belongsTo / hasOne` examples (simplified from graviscope)
+```
+
+```
 
 

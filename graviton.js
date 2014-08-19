@@ -119,7 +119,7 @@ var getModelCls = function(obj, options) {
   return Graviton.Model;
 };
 
-// use this to declare new models collections
+// declare new collections of models
 // options contain the relations etc.
 Graviton.define = function(collectionName, options) {
   if (!options) options = {};

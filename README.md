@@ -52,9 +52,9 @@ The following are added to all your meteor collections:
 * embeds:
 * embedsMany:
 
-Pass the following as keys to Graviton.define do declare relationships with other collections. Emample: 
+Pass the following as keys to Graviton.define do declare relationships with other collections. Example: 
 ```javascript
-CarModel = Graviton.model.extend({
+CarModel = Graviton.Model.extend({
   belongsTo: {
     owner: {
       klass: 'people',
@@ -125,6 +125,7 @@ Graviton transforms collection objects into Models for you. This allows them to 
     * `defaults`: an object containing default key:value pairs for the collection. These key:values will be added to all model instances where there is not already a stored value with the same key. Functions should not be placed here as stored records cannot have functions as values.
     * `initialize`: a function which will be run on initialization.
     * _relationships_: define how this model relates to other collections. `belongsTo`, `belongsToMany`, `hasOne`, `hasMany`, etc.
+    
   *ExtensionPrototype*
     * This object contains the extension prototype. This is the place to add functions to the model. Values could also be placed here if they relate to this specific model. These do not behave as attributes - any values placed here will not be stored.
       

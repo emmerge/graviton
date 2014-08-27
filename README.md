@@ -17,7 +17,7 @@ Collections defined with Graviton automatically convert retrieved objects into m
 Graviton can be installed with [Meteorite](https://github.com/oortcloud/meteorite/). From inside a Meteorite-managed Meteor app:
 
 ``` sh
-$ mrt add iron-router
+$ mrt add graviton
 ```
 
 # API Docs

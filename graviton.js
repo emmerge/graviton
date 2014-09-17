@@ -3,13 +3,23 @@ Graviton = {
   _collections: {}
 };
 
+// Meteor.users is a special collection which should not be transformed. Here it is added to Graviton._collections
+// so it can be referenced by other other collections without a model/transformation.
 Meteor.startup(function() {
   Graviton._collections.users = Meteor.users;
 });
 
-// convenience
+/**
+ *
+ * Meteor.Collection.prototype
+ *
+ */
+
+// all() convenience method == find().fetch()
 Meteor.Collection.prototype.all = ManyRelation.prototype.all;
 
+// build an instance of this collections model type but do not save it to the db
+// returns the built model.
 Meteor.Collection.prototype.build = function(obj) {
   if (!_.isObject(obj)) obj = {};
   var mdl = this._graviton.model(obj);
@@ -30,6 +40,12 @@ Meteor.Collection.prototype.create = function(obj, callback) {
   }
   return model;
 };
+
+/**
+ *
+ * Graviton
+ *
+ */
 
 // use a period-delimited string to access a deeply-nested object
 Graviton.getProperty = function(obj, string) {
@@ -58,6 +74,13 @@ Graviton.setProperty = function(obj, key, val) {
   }
 };
 
+// Helper function to deal with objects which may have keys which are illegal in mongo
+// 1. Mongo keys cannot start with $
+// -- convert starts with $ to starts with #
+// -- also convert starts with # to starts with ## to avoid collisions
+// 2. Mongo keys cannot contain .
+// -- convert . to @
+// -- also convert @ to @@ to avoid collisions
 Graviton.sanitizeKeysForMongo = function(obj) {
   var nk;
   for (var k in obj) {
@@ -96,7 +119,7 @@ var getModelCls = function(obj, options) {
   return Graviton.Model;
 };
 
-// use this to declare new models
+// declare new collections of models
 // options contain the relations etc.
 Graviton.define = function(collectionName, options) {
   if (!options) options = {};

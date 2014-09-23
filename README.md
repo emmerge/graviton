@@ -22,14 +22,14 @@ $ mrt add graviton
 
 # API Docs
 
-## Meteor.Collection.prototype
+## Mongo.Collection.prototype
 The following are added to all your meteor collections:
 * `all()` is an alias for `find().fetch()`
 * `build()` returns a new local `Gravition.Model` based on your collection definition. Does not save to db. The instance can be saved using `Model.save()`.
 * `create()` calls build() to generate a Model instance then inserts it into the db.
 
 ## Graviton
-* `Graviton.define(collectionName, options)` Use to define your collections. Returns a Meteor.Collection instantiated with a transform function based on the options passed.
+* `Graviton.define(collectionName, options)` Use to define your collections. Returns a Mongo.Collection instantiated with a transform function based on the options passed.
 
   *Options*
     * `persist` Passing false will define a local collection. defaults to `true`
@@ -119,7 +119,7 @@ car.windows.at(2); // only builds one model
 
 Graviton transforms collection objects into Models for you. This allows them to carry useful metadata and functions with the data. The vanilla Graviton.Model allows for basic functionality. Defining an extension of the Graviton.Model allows you to specify details of the collection's relationships or other custom functionality.
 
-* `Graviton.Model.extend({Options}, {ExtensionPrototype});` Use to define your collections. Returns a Meteor.Collection instantiated with a transform function based on the options passed.
+* `Graviton.Model.extend({Options}, {ExtensionPrototype});` Use to define your collections. Returns a Mongo.Collection instantiated with a transform function based on the options passed.
 
   *Options*
     * `defaults`: an object containing default key:value pairs for the collection. These key:values will be added to all model instances where there is not already a stored value with the same key. Functions should not be placed here as stored records cannot have functions as values.

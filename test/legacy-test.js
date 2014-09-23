@@ -92,7 +92,7 @@ Driver = Graviton.define("drivers", {
 init(Driver);
 
 Plate = Graviton.define("plates", {
-  persist: false // sends null as mongo collection name to Meteor.Collection
+  persist: false // sends null as mongo collection name to Mongo.Collection
 });
 
 Window = Graviton.define("windows", {

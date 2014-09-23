@@ -3,6 +3,12 @@ Package.describe({
 });
 
 Package.on_use(function (api, where) {
+
+  if (api.versionsFrom) { // 0.9.0+ litmus test
+    api.versionsFrom("0.9.1");
+    api.use('mongo', ['client', 'server']);
+  }
+
   api.use(['underscore', 'minimongo', 'async'], ['client', 'server']);
   api.add_files(['lib/relations.js', 'lib/model.js', 'graviton.js'], ['client', 'server']);
 

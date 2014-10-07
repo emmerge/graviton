@@ -95,7 +95,7 @@ var Driver = Graviton.define("rt-drivers", {
 init(Driver);
 
 var Plate = Graviton.define("rt-plates", {
-  persist: false // sends null as mongo collection name to Meteor.Collection
+  persist: false // sends null as mongo collection name to Mongo.Collection
 });
 
 var Window = Graviton.define("rt-windows", {

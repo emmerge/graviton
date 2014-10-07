@@ -11,16 +11,18 @@ Meteor.startup(function() {
 
 /**
  *
- * Meteor.Collection.prototype
+ * Mongo.Collection.prototype
  *
  */
 
+CollectionClass = (typeof Mongo !== 'undefined') ? Mongo.Collection : Meteor.Collection;
+
 // all() convenience method == find().fetch()
-Meteor.Collection.prototype.all = ManyRelation.prototype.all;
+CollectionClass.prototype.all = ManyRelation.prototype.all;
 
 // build an instance of this collections model type but do not save it to the db
 // returns the built model.
-Meteor.Collection.prototype.build = function(obj) {
+CollectionClass.prototype.build = function(obj) {
   if (!_.isObject(obj)) obj = {};
   var mdl = this._graviton.model(obj);
   mdl._id = obj._id;
@@ -28,7 +30,7 @@ Meteor.Collection.prototype.build = function(obj) {
 };
 
 // does an insert but builds a model first, returns the model instead of an id
-Meteor.Collection.prototype.create = function(obj, callback) {
+CollectionClass.prototype.create = function(obj, callback) {
   var model = this.build(obj);
   var id;
   if (callback) {
@@ -155,7 +157,7 @@ Graviton.define = function(collectionName, options) {
 
   var colName = (options.persist) ? collectionName : null;
 
-  var collection = new Meteor.Collection(colName, {
+  var collection = new CollectionClass(colName, {
     transform: options.model
   });
 

@@ -1,5 +1,7 @@
 Graviton = {
   Model: Model,
+  Relation: Relation,
+  ManyRelation: ManyRelation,
   _collections: {}
 };
 

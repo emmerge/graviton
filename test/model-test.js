@@ -82,7 +82,21 @@ var FlyingElectricCarModel = ElectricCarModel.extend({
   }
 });
 
-var Car = Graviton.define('model-server-cars', {
+// test defaulting collectionName to relation name
+var CarOwnerModel = Graviton.Model.extend({
+  hasMany: {
+    'model-test-cars': {
+      foreignKey: 'carId'
+    }
+  }
+});
+
+var CarOwner = Graviton.define('model-test-car-owners', {
+  modelCls: CarOwnerModel
+});
+allowAll(CarOwner);
+
+var Car = Graviton.define('model-test-cars', {
   modelCls: {
     gas: CarModel,
     electric: ElectricCarModel,
@@ -98,6 +112,15 @@ allowAll(Person);
 var Battery = Graviton.define('model-test-batteries');
 allowAll(Battery);
 
+var Item = Graviton.Model.extend({
+  defaults: {
+    
+  }
+})
+
+
+
+
 var addTest = function(name, fn) {
   Tinytest.add(name, function(test) {
     setup();
@@ -107,6 +130,11 @@ var addTest = function(name, fn) {
 
 var setup = function() {
 };
+
+Tinytest.add("Model Relations - default collection name", function(test) {
+  var o = CarOwner.create();
+  test.equal(o['model-test-cars'].all(), []);
+});
 
 Tinytest.add("Model Relations - belongsTo", function(test) {
   var p = Person.create();

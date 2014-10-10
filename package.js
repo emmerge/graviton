@@ -18,7 +18,7 @@ Package.on_use(function (api, where) {
 });
 
 Package.on_test(function (api) {
-  api.use(['graviton', 'tinytest', 'test-helpers']);
+  api.use(['underscore', 'graviton', 'tinytest', 'test-helpers']);
 
   api.add_files([
     'test/test-helpers.js',

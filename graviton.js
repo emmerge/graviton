@@ -78,6 +78,22 @@ Graviton.setProperty = function(obj, key, val) {
   }
 };
 
+Graviton.mongoSanitize = function(str) {
+  if (/^\#/.test(str)) {
+    str = '##'+str.substr(1);
+  }
+  if (/^\$/.test(str)) {
+    str = '#'+str.substr(1);
+  }
+  if (/\@/.test(str)) {
+    str = str.replace(/\@/g, '@@')
+  }
+  if (/\./.test(str)) {
+    str = str.replace(/\./g, '@');
+  }
+  return str;
+};
+
 // Helper function to deal with objects which may have keys which are illegal in mongo
 // 1. Mongo keys cannot start with $
 // -- convert starts with $ to starts with #
@@ -89,19 +105,7 @@ Graviton.sanitizeKeysForMongo = function(obj) {
   var nk;
   for (var k in obj) {
     if (_.isObject(obj[k])) Graviton.sanitizeKeysForMongo(obj[k]);
-    nk = k;
-    if (/^\#/.test(nk)) {
-      nk = '##'+nk.substr(1);
-    }
-    if (/^\$/.test(nk)) {
-      nk = '#'+nk.substr(1);
-    }
-    if (/\@/.test(nk)) {
-      nk = nk.replace(/\@/g, '@@')
-    }
-    if (/\./.test(nk)) {
-      nk = nk.replace(/\./g, '@');
-    }
+    nk = Graviton.mongoSanitize(k);
     if (nk !== k) {
       obj[nk] = obj[k];
       delete obj[k];

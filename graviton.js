@@ -132,14 +132,7 @@ var getModelCls = function(obj, options) {
 Graviton.define = function(collectionName, options) {
   if (!options) options = {};
 
-  var relations = _.pick(options,
-    'belongsTo',
-    'belongsToMany',
-    'hasOne',
-    'hasMany',
-    'embeds',
-    'embedsMany'
-  );
+  var relations = _.pick(options, Relation.typeNames());
 
   options = _.pick(options, 
     'persist', // if false, is backed by a local collection only

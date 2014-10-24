@@ -169,7 +169,8 @@ Graviton.define = function(collectionName, options) {
     });
     collection.before.update(function(userId, doc, fieldNames, modifier, options) {
       var now = +new Date;
-      doc.updatedAt = now;
+      modifier.$set = modifier.$set || {};
+      modifier.$set.updatedAt = now;
     });
   }
 

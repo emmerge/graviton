@@ -5,12 +5,6 @@ Graviton = {
   _collections: {}
 };
 
-// Meteor.users is a special collection which should not be transformed. Here it is added to Graviton._collections
-// so it can be referenced by other other collections without a model/transformation.
-Meteor.startup(function() {
-  Graviton._collections.users = Meteor.users;
-});
-
 /**
  *
  * Mongo.Collection.prototype
@@ -152,26 +146,32 @@ Graviton.define = function(collectionName, options) {
     return new Cls(collection, obj);
   };
 
-  var colName = (options.persist) ? collectionName : null;
+  var collection;
 
-  var collection = new Mongo.Collection(colName, {
-    transform: options.model
-  });
+  if (collectionName === 'users') {
+    collection = Meteor.users;
+  } else {
+    var colName = (options.persist) ? collectionName : null;
 
-  // uses collection-hooks package
-  if (Meteor.isServer && options.timestamps && collection.before) {
-    collection.before.insert(function(userId, doc) {
-      var now = +new Date;
-      doc.createdAt = now;
-      doc.updatedAt = now;
+    collection = new Mongo.Collection(colName, {
+      transform: options.model
     });
-    collection.before.update(function(userId, doc, fieldNames, modifier, options) {
-      var now = +new Date;
-      modifier.$set = modifier.$set || {};
-      modifier.$set.updatedAt = now;
-    });
+
+    // uses collection-hooks package
+    if (Meteor.isServer && options.timestamps && collection.before) {
+      collection.before.insert(function(userId, doc) {
+        var now = +new Date;
+        doc.createdAt = now;
+        doc.updatedAt = now;
+      });
+      collection.before.update(function(userId, doc, fieldNames, modifier, options) {
+        var now = +new Date;
+        modifier.$set = modifier.$set || {};
+        modifier.$set.updatedAt = now;
+      });
+    }
   }
-
+  
   this._collections[collectionName] = collection;
   collection._graviton = options;
 

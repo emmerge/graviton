@@ -1,4 +1,4 @@
-graviton
+graviton [![](https://api.travis-ci.org/emmerge/graviton.svg)](https://travis-ci.org/emmerge/graviton)
 ========
 
 Relations and models for Meteor collections.

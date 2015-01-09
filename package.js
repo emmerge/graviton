@@ -1,5 +1,6 @@
 Package.describe({
-  summary: "Define and use relationships between meteor collections"
+  summary: "Define and use relationships between meteor collections",
+  git: "https://github.com/emmerge/graviton"
 });
 
 Package.on_use(function (api, where) {

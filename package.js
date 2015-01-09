@@ -1,6 +1,8 @@
 Package.describe({
-  summary: "Define and use relationships between meteor collections",
-  git: "https://github.com/emmerge/graviton"
+  name: 'emmerge:graviton',
+  summary: "Transform collection records into Models and define and use relationships between Meteor collections.",
+  git: "https://github.com/emmerge/graviton",
+  version: '0.0.7'
 });
 
 Package.on_use(function (api, where) {
@@ -10,7 +12,7 @@ Package.on_use(function (api, where) {
     api.use('mongo', ['client', 'server']);
   }
 
-  api.use(['underscore', 'minimongo', 'peerlibrary:async'], ['client', 'server']);
+  api.use(['underscore', 'minimongo', 'peerlibrary:async@0.9.0-1'], ['client', 'server']);
   api.add_files(['lib/relations.js', 'lib/model.js', 'graviton.js'], ['client', 'server']);
 
   if (typeof api.export !== 'undefined') {
@@ -19,7 +21,7 @@ Package.on_use(function (api, where) {
 });
 
 Package.on_test(function (api) {
-  api.use(['underscore', 'graviton', 'tinytest', 'test-helpers']);
+  api.use(['underscore', 'tinytest', 'test-helpers']);
 
   api.add_files([
     'test/test-helpers.js',

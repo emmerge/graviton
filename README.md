@@ -14,7 +14,7 @@ Collections defined with Graviton automatically convert retrieved objects into m
 
 ##  Installation
 
-Graviton can be installed with [Meteorite](https://github.com/oortcloud/meteorite/). From inside a Meteorite-managed Meteor app:
+In a Meteor app directory run:
 
 ``` sh
 $ meteor add emmerge:graviton

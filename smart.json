@@ -1,8 +1,8 @@
 {
   "name": "graviton",
   "description": "Relations and models for Meteor collections",
-  "homepage": "https://github.com/thredder/graviton",
+  "homepage": "https://github.com/emmerge/graviton",
   "author": "Jeremy Dunn",
   "version": "0.0.4",
-  "git": "https://github.com/thredder/graviton.git"
+  "git": "https://github.com/emmerge/graviton.git"
 }

@@ -194,6 +194,8 @@ Tinytest.add('Graviton - isModel', function(test) {
   test.isFalse(Graviton.isModel(234));
   test.isFalse(Graviton.isModel(_));
   test.isFalse(Graviton.isModel(Graviton));
+  test.isFalse(Graviton.isModel(undefined));
+  test.isFalse(Graviton.isModel(null));
 });
 
 addTest('Collection - create', function(test) {

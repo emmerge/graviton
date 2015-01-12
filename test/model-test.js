@@ -247,7 +247,7 @@ addTest('Model.prototype - modify', function(test) {
   test.equal(c.get('color'), 'orange');
   test.isUndefined(c.get('name'));
 
-  var dbcar = Car.findOne(c._id)
+  var dbcar = Car.findOne(c._id);
   test.equal(dbcar.get('color'), 'blue');
   test.isTrue(_.isUndefined(dbcar.get('name')));
 });
@@ -338,7 +338,7 @@ addTest('Model.prototype - push', function(test) {
     }
   });
   c.push('drivers', 'Mario');
-  test.equal(['Mario'], c.get('drivers'));
+  test.equal(c.get('drivers'), ['Mario']);
   test.equal(c._pendingMods, [{$push: {drivers: 'Mario'}}]);
 
   c.push({
@@ -385,11 +385,11 @@ addTest('Model.prototype - addToSet', function(test) {
     }
   });
   c.addToSet('drivers', 'Mario');
-  test.equal(['Mario'], c.get('drivers'));
+  test.equal(c.get('drivers'), ['Mario']);
   test.equal(c._pendingMods, [{$addToSet: {drivers: 'Mario'}}]);
 
   c.addToSet('drivers', 'Mario');
-  test.equal(['Mario'], c.get('drivers'));
+  test.equal(c.get('drivers'), ['Mario']);
   var mod = _.last(c._pendingMods);
   test.equal(mod, {$addToSet: {drivers: 'Mario'}});
 

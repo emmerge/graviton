@@ -344,6 +344,7 @@ addTest('Model.prototype - push', function(test) {
     drivers: 'Luigi'
   });
 
+  //TODO: test drivers value
   test.equal(c.get('flaws.scratches').length, 3);
   var mod = _.last(c._pendingMods);
   test.equal(mod, {$push: {drivers: 'Luigi', 'flaws.scratches': {$each: ['door', 'bumper', 'hood']}}});
@@ -373,3 +374,29 @@ addTest('Model.prototype - shift', function(test) {
   test.equal(c.get('flaws.scratches'), ['door', 'bumper']);
 });
 
+
+addTest('Model.prototype - addToSet', function(test) {
+  var c = Car.build({
+    drivers: [],
+    flaws: {
+      scratches: ['bumper','taillight']
+    }
+  });
+  c.addToSet('drivers', 'Mario');
+  test.equal(['Mario'], c.get('drivers'));
+  test.equal(c._pendingMods, [{$addToSet: {drivers: 'Mario'}}]);
+
+  c.addToSet('drivers', 'Mario');
+  test.equal(['Mario'], c.get('drivers'));
+  var mod = _.last(c._pendingMods);
+  test.equal(mod, {$addToSet: {drivers: 'Mario'}});
+
+  c.addToSet({
+    'flaws.scratches': ['door', 'bumper', 'hood'],
+    drivers: 'Luigi'
+  });
+
+  test.equal(c.get('flaws.scratches').length, 4);
+  mod = _.last(c._pendingMods);
+  test.equal(mod, {$addToSet: {drivers: 'Luigi', 'flaws.scratches': {$each: ['door', 'bumper', 'hood']}}});
+});

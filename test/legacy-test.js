@@ -148,7 +148,7 @@ setup();
 
 Tinytest.add('Legacy Relations - hasMany', function(test) {
   setup();
-  test.equal(c.wheels._collection._name, 'wheels');
+  test.equal(c.wheels._collection._name, 'wheels testing a test failure');
   test.equal(c.wheels.find().count(), 4);
   test.equal(c.wheels.all().length, c.wheels.find().count());
   test.equal(c.wheels.find({tread: 'new'}).count(), 3);

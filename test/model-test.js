@@ -116,7 +116,7 @@ var Item = Graviton.Model.extend({
   defaults: {
     
   }
-})
+});
 
 
 

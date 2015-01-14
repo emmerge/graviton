@@ -537,19 +537,69 @@ addTest('Model.prototype - save - two operations, updating an existing record', 
   test.equal(Car.findOne(c._id).get('mileage'), 100002);
 });
 
-/* TODO: this test needs to test the results asyncronously
-addTest('Model.prototype - save - two operations updating an existing record w/callback', function(test) {
-  var c = Car.create({mileage: 100000});
-  c.inc('mileage', 1);
-  test.equal(c.get('mileage'), 100001);
-  test.equal(c._pendingMods, [{$inc: {mileage: 1}}]);
-  c.inc('mileage', 1);
-  test.equal(c.get('mileage'), 100002);
-  test.equal(c._pendingMods, [{$inc: {mileage: 1}}, {$inc: {mileage: 1}}]);
-  c.save(function() { console.log(Car.findOne(c._id).get('mileage'),'cb miles')});
 
-  //the following only see one of the two updates...
-  console.log(Car.findOne(c._id).get('mileage'), 'non cb miles');
-  test.equal(Car.findOne(c._id).get('mileage'), 100002);
-});
-*/
+if (Meteor.isServer) { //TODO: how do you write a client version of these tests?
+
+  Tinytest.addAsync('Model.prototype - save - two operations updating an existing record w/callback variant 1',
+    function(test, next) {
+      var c = Car.create({mileage: 100000});
+      c.inc('mileage', 1);
+      c.inc('mileage', 1);
+      c.save(function (error) {
+        if (error) test.fail('.save() resulted in error '+ error.message);
+        var dbCar = Car.findOne(c._id);
+        test.equal(dbCar.get('mileage'), 100002);
+        next();
+      });
+    }
+  );
+
+  testAsyncMulti('Model.prototype - save - two operations updating an existing record w/callback variant 2', [
+    function (test, expect) {
+      var c = Car.create({mileage: 100000});
+      c.inc('mileage', 1);
+      c.inc('mileage', 1);
+      c.save(expect(function (error) {
+        if (error) test.fail('.save() resulted in error '+ error.message);
+        var dbCar = Car.findOne(c._id);
+        test.equal(dbCar.get('mileage'), 100002);
+      }));
+    }]
+  );
+
+  var twoUpdateCar;
+  testAsyncMulti('Model.prototype - save - two operations updating an existing record w/callback test  variant 3', [
+    function(test, expect) {
+      var c = Car.create({mileage: 100000});
+      twoUpdateCar = c._id;
+      c.inc('mileage', 1);
+      c.inc('mileage', 1);
+      console.log('async multi save');
+      c.save(expect(function(error) {
+        if (error) test.fail('.save() resulted in error '+ error.message);
+        console.log('expectation');
+        console.log('finding car',twoUpdateCar);
+        var dbCar = Car.findOne(twoUpdateCar);
+        test.isTrue(dbCar);
+        test.equal(dbCar.get('mileage'), 100002);
+      }))
+    },
+    function(test, expect) {
+      if (Meteor.isClient)
+        Meteor.setTimeout(expect(function () {
+          console.log('finding car',twoUpdateCar);
+          var dbCar = Car.findOne(twoUpdateCar);
+          test.isTrue(dbCar);
+          test.equal(dbCar.get('mileage'), 100002);
+        }), 1000);
+      else
+      {
+        console.log('finding car',twoUpdateCar);
+        var dbCar = Car.findOne(twoUpdateCar);
+        test.isTrue(dbCar);
+        test.equal(dbCar.get('mileage'), 100002);
+      }
+    }
+  ]);
+}
+

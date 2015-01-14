@@ -413,6 +413,40 @@ addTest('Model.prototype - addToSet - on property that does not exist', function
   test.equal(c._pendingMods, [{$addToSet: {drivers: 'Mario'}}]);
 });
 
+addTest('Model.prototype - addToSet - on property that is equal to undefined', function(test) {
+  var c = Car.build({aInteger: 1, aString: "foo", aFalse: false, aNull: null, aUndefined: undefined});
+  c.addToSet('aUndefined', 1);
+  test.equal(c.get('aUndefined'), [1]);
+});
+
+addTest('Model.prototype - addToSet - on property that is an integer', function(test) {
+  var c = Car.build({aInteger: 1, aString: "foo", aFalse: false, aNull: null, aUndefined: undefined});
+  test.throws(function () {
+    c.addToSet('aInteger', 1);
+  }, 'Trying to addToSet on a non-array property');
+});
+
+addTest('Model.prototype - addToSet - on property that is a string', function(test) {
+  var c = Car.build({aInteger: 1, aString: "foo", aFalse: false, aNull: null, aUndefined: undefined});
+  test.throws(function() {
+    c.addToSet('aString', 'f');
+  }, 'Trying to addToSet on a non-array property');
+});
+
+addTest('Model.prototype - addToSet - on property that is a boolean', function(test) {
+  var c = Car.build({aInteger: 1, aString: "foo", aFalse: false, aNull: null, aUndefined: undefined});
+  test.throws(function() {
+    c.addToSet('aFalse', false);
+  }, 'Trying to addToSet on a non-array property');
+});
+
+addTest('Model.prototype - addToSet - on property that is null', function(test) {
+  var c = Car.build({aInteger: 1, aString: "foo", aFalse: false, aNull: null, aUndefined: undefined});
+  test.throws(function() {
+    c.addToSet('aNull', 1);
+  }, 'Trying to addToSet on a non-array property');
+});
+
 // TODO: test that there are errors thrown on addToSet for properties that exist and are not arrays
 
 /**

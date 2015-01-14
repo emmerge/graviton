@@ -27,7 +27,8 @@ Package.on_test(function (api) {
     'test/test-helpers.js',
     'test/relation-test.js',
     'test/model-test.js',
-    'test/legacy-test.js'
+    'test/legacy-test.js',
+    'test/packages-test.js'
   ], 
   ['client', 'server']);
 });

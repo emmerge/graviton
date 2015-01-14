@@ -451,3 +451,50 @@ addTest('Model.prototype - inc - on a property that does not exist', function(te
   test.equal(c._pendingMods, [{$inc: {mileage: 1}}, {$inc: {mileage: 1}}, {$inc: {mileage: 5}}, {$inc: {mileage: -65}}]);
 });
 
+/**
+ * Model.prototype.persist() detail tests
+ */
+
+addTest('Model.prototype - persist - two operations', function(test) {
+  var c = Car.build({mileage: 100000});
+  c.inc('mileage', 1);
+  test.equal(c.get('mileage'), 100001);
+  test.equal(c._pendingMods, [{$inc: {mileage: 1}}]);
+  c.inc('mileage', 1);
+  test.equal(c.get('mileage'), 100002);
+  test.equal(c._pendingMods, [{$inc: {mileage: 1}}, {$inc: {mileage: 1}}]);
+  var r = c.persist();
+  test.isTrue(r);
+  test.equal(Car.findOne(c._id).get('mileage'), 100002);
+});
+addTest('Model.prototype - persist - two operations w/callback', function(test) {
+  var c = Car.build({mileage: 100000});
+  c.inc('mileage', 1);
+  test.equal(c.get('mileage'), 100001);
+  test.equal(c._pendingMods, [{$inc: {mileage: 1}}]);
+  c.inc('mileage', 1);
+  test.equal(c.get('mileage'), 100002);
+  test.equal(c._pendingMods, [{$inc: {mileage: 1}}, {$inc: {mileage: 1}}]);
+  var r = c.persist(function(){});
+  test.isTrue(r);
+  test.equal(Car.findOne(c._id).get('mileage'), 100002);
+});
+addTest('Model.prototype - persist - does not update existing record', function(test) {
+  var c = Car.create({mileage: 100000});
+  c.inc('mileage', 1);
+  test.equal(c.get('mileage'), 100001);
+  test.equal(c._pendingMods, [{$inc: {mileage: 1}}]);
+  var r = c.persist();
+  test.isFalse(r);
+  test.equal(Car.findOne(c._id).get('mileage'), 100000);
+});
+addTest('Model.prototype - persist - does not update existing record w/callback', function(test) {
+  var c = Car.create({mileage: 100000});
+  c.inc('mileage', 1);
+  test.equal(c.get('mileage'), 100001);
+  test.equal(c._pendingMods, [{$inc: {mileage: 1}}]);
+  var r = c.persist(function(){});
+  test.isFalse(r);
+  test.equal(Car.findOne(c._id).get('mileage'), 100000);
+});
+

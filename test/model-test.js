@@ -498,3 +498,58 @@ addTest('Model.prototype - persist - does not update existing record w/callback'
   test.equal(Car.findOne(c._id).get('mileage'), 100000);
 });
 
+/**
+ * Model.prototype.save() detail tests
+ */
+addTest('Model.prototype - save - two operations, new record', function(test) {
+  var c = Car.build({mileage: 100000});
+  c.inc('mileage', 1);
+  test.equal(c.get('mileage'), 100001);
+  test.equal(c._pendingMods, [{$inc: {mileage: 1}}]);
+  c.inc('mileage', 1);
+  test.equal(c.get('mileage'), 100002);
+  test.equal(c._pendingMods, [{$inc: {mileage: 1}}, {$inc: {mileage: 1}}]);
+  c.save();
+  test.equal(Car.findOne(c._id).get('mileage'), 100002);
+});
+
+addTest('Model.prototype - save - two operations, new record, w/callback', function(test) {
+  var c = Car.build({mileage: 100000});
+  c.inc('mileage', 1);
+  test.equal(c.get('mileage'), 100001);
+  test.equal(c._pendingMods, [{$inc: {mileage: 1}}]);
+  c.inc('mileage', 1);
+  test.equal(c.get('mileage'), 100002);
+  test.equal(c._pendingMods, [{$inc: {mileage: 1}}, {$inc: {mileage: 1}}]);
+  c.save(function() {});
+  test.equal(Car.findOne(c._id).get('mileage'), 100002);
+});
+
+addTest('Model.prototype - save - two operations, updating an existing record', function(test) {
+  var c = Car.create({mileage: 100000});
+  c.inc('mileage', 1);
+  test.equal(c.get('mileage'), 100001);
+  test.equal(c._pendingMods, [{$inc: {mileage: 1}}]);
+  c.inc('mileage', 1);
+  test.equal(c.get('mileage'), 100002);
+  test.equal(c._pendingMods, [{$inc: {mileage: 1}}, {$inc: {mileage: 1}}]);
+  c.save();
+  test.equal(Car.findOne(c._id).get('mileage'), 100002);
+});
+
+/* TODO: this test needs to test the results asyncronously
+addTest('Model.prototype - save - two operations updating an existing record w/callback', function(test) {
+  var c = Car.create({mileage: 100000});
+  c.inc('mileage', 1);
+  test.equal(c.get('mileage'), 100001);
+  test.equal(c._pendingMods, [{$inc: {mileage: 1}}]);
+  c.inc('mileage', 1);
+  test.equal(c.get('mileage'), 100002);
+  test.equal(c._pendingMods, [{$inc: {mileage: 1}}, {$inc: {mileage: 1}}]);
+  c.save(function() { console.log(Car.findOne(c._id).get('mileage'),'cb miles')});
+
+  //the following only see one of the two updates...
+  console.log(Car.findOne(c._id).get('mileage'), 'non cb miles');
+  test.equal(Car.findOne(c._id).get('mileage'), 100002);
+});
+*/

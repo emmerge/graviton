@@ -377,7 +377,7 @@ addTest('Model.prototype - shift', function(test) {
 });
 
 
-addTest('Model.prototype - addToSet', function(test) {
+addTest('Model.prototype - addToSet - normal', function(test) {
   var c = Car.build({
     drivers: [],
     flaws: {
@@ -402,3 +402,13 @@ addTest('Model.prototype - addToSet', function(test) {
   mod = _.last(c._pendingMods);
   test.equal(mod, {$addToSet: {drivers: 'Luigi', 'flaws.scratches': {$each: ['door', 'bumper', 'hood']}}});
 });
+
+addTest('Model.prototype - addToSet - on property that does not exist', function(test) {
+  var c = Car.build({});
+  c.addToSet('drivers', 'Mario');
+  test.equal(c.get('drivers'), ['Mario']);
+  test.equal(c._pendingMods, [{$addToSet: {drivers: 'Mario'}}]);
+});
+
+// TODO: test that there are errors thrown on addToSet for properties that exist and are not arrays
+

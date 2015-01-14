@@ -376,6 +376,9 @@ addTest('Model.prototype - shift', function(test) {
   test.equal(c.get('flaws.scratches'), ['door', 'bumper']);
 });
 
+/**
+ * Model.prototype.addToSet()
+ */
 
 addTest('Model.prototype - addToSet - normal', function(test) {
   var c = Car.build({
@@ -411,4 +414,40 @@ addTest('Model.prototype - addToSet - on property that does not exist', function
 });
 
 // TODO: test that there are errors thrown on addToSet for properties that exist and are not arrays
+
+/**
+ * Model.prototype.inc()
+ */
+
+addTest('Model.prototype - inc - on a property that exists', function(test) {
+  var c = Car.build({mileage: 56});
+  c.inc('mileage', 1);
+  test.equal(c.get('mileage'), 57);
+  test.equal(c._pendingMods, [{$inc: {mileage: 1}}]);
+  c.inc('mileage', 1);
+  test.equal(c.get('mileage'), 58);
+  test.equal(c._pendingMods, [{$inc: {mileage: 1}}, {$inc: {mileage: 1}}]);
+  c.inc('mileage', 5);
+  test.equal(c.get('mileage'), 63);
+  test.equal(c._pendingMods, [{$inc: {mileage: 1}}, {$inc: {mileage: 1}}, {$inc: {mileage: 5}}]);
+  c.inc('mileage', -65);
+  test.equal(c.get('mileage'), -2);
+  test.equal(c._pendingMods, [{$inc: {mileage: 1}}, {$inc: {mileage: 1}}, {$inc: {mileage: 5}}, {$inc: {mileage: -65}}]);
+});
+
+addTest('Model.prototype - inc - on a property that does not exist', function(test) {
+  var c = Car.build({});
+  c.inc('mileage', 1);
+  test.equal(c.get('mileage'), 1);
+  test.equal(c._pendingMods, [{$inc: {mileage: 1}}]);
+  c.inc('mileage', 1);
+  test.equal(c.get('mileage'), 2);
+  test.equal(c._pendingMods, [{$inc: {mileage: 1}}, {$inc: {mileage: 1}}]);
+  c.inc('mileage', 5);
+  test.equal(c.get('mileage'), 7);
+  test.equal(c._pendingMods, [{$inc: {mileage: 1}}, {$inc: {mileage: 1}}, {$inc: {mileage: 5}}]);
+  c.inc('mileage', -65);
+  test.equal(c.get('mileage'), -58);
+  test.equal(c._pendingMods, [{$inc: {mileage: 1}}, {$inc: {mileage: 1}}, {$inc: {mileage: 5}}, {$inc: {mileage: -65}}]);
+});
 

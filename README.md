@@ -1,4 +1,4 @@
-graviton [![](https://api.travis-ci.org/emmerge/graviton.svg)](https://travis-ci.org/emmerge/graviton)
+graviton [![](https://api.travis-ci.org/emmerge/graviton.svg)](https://travis-ci.org/emmerge/graviton) [ ![Codeship Status for emmerge/graviton](https://codeship.com/projects/54dafd30-7cbe-0132-798d-7a5cdf781b38/status?branch=master)](https://codeship.com/projects/56481)
 ========
 
 Relations and models for Meteor collections.

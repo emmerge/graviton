@@ -582,7 +582,7 @@ if (Meteor.isServer) { //TODO: how do you write a client version of these tests?
         var dbCar = Car.findOne(twoUpdateCar);
         test.isTrue(dbCar);
         test.equal(dbCar.get('mileage'), 100002);
-      }))
+      }));
     },
     function(test, expect) {
       if (Meteor.isClient)

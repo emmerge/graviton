@@ -1,6 +1,14 @@
 /**
  * quick test to make sure async.series and parallel work as we expect
  */
+
+Tinytest.addAsync("packages - async - series() [empty]", function(test, next) {
+  var done = function() {
+    next(); // if done is not called the test will stall / fail
+  };
+  async.series([], done);
+});
+
 Tinytest.addAsync("packages - async - series()", function(test, next) {
   var foo = '';
   var f1 = function(cb) {

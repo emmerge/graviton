@@ -12,7 +12,7 @@ Package.on_use(function (api, where) {
     api.use('mongo', ['client', 'server']);
   }
 
-  api.use(['underscore', 'minimongo', 'peerlibrary:async@0.9.0-1'], ['client', 'server']);
+  api.use(['underscore', 'minimongo', 'peerlibrary:async@0.9.2_1'], ['client', 'server']);
   api.add_files(['lib/relations.js', 'lib/model.js', 'graviton.js'], ['client', 'server']);
 
   if (typeof api.export !== 'undefined') {

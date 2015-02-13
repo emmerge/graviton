@@ -70,6 +70,11 @@ Graviton.setProperty = function(obj, key, val) {
   }
 };
 
+// currently mongo sanitize causes ambiguous / non-unique keys for some inputs such as...
+// '$#foo' vs '#foo'
+// 'foo@.bar' vs 'foo.@bar'
+// 'foo..bar' vs 'foo@bar'
+// TODO: refactor to make non-ambiguous / unique keys - probably incorporating some other special characters
 Graviton.mongoSanitize = function(str) {
   if (/^\#/.test(str)) {
     str = '##'+str.substr(1);
@@ -84,6 +89,19 @@ Graviton.mongoSanitize = function(str) {
     str = str.replace(/\./g, '@');
   }
   return str;
+};
+
+Graviton.reverseMongoSanitize = function(sanitizedString) {
+  if (_.isString(sanitizedString)) {
+    // first replace all singular @ symbols (in js regex that means @ not followed by @ and proceeded by a the beginning of the string or by @)
+    return sanitizedString.replace(/(^|[^@])@(?!@)/g,'$1.')
+      // then replace @@
+      .replace(/@@/g,'@')
+      // then replace starts with # (not followed by another #)
+      .replace(/^\#(?!\#)/,'$')
+      // then replace starts with ##
+      .replace(/^\#\#/,'#');
+  }
 };
 
 // Helper function to deal with objects which may have keys which are illegal in mongo

@@ -28,8 +28,9 @@ Package.on_test(function (api) {
     'test/relation-test.js',
     'test/model-test.js',
     'test/legacy-test.js',
-    'test/packages-test.js'
-  ], 
+    'test/packages-test.js',
+    'test/unit-test.js'
+  ],
   ['client', 'server']);
 });
 

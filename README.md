@@ -221,6 +221,23 @@ Use to create a model constructor.
 | [options.\<_relationships_\>] | `Object` | define how this model relates to other collections. `belongsTo`, `belongsToMany`, `hasOne`, `hasMany`, etc. |
 | [extensionPrototype] | `Object` | This object contains the extension prototype. This is the place to add functions to the model. Values could also be placed here if they relate to this specific model. These do not behave as attributes - any values placed here will not be stored. |
 
+##Model manipulation
+
+### `Model.get(key)`
+### `Model.set(thing, value)`
+### `Model.inc(thing, increment)`
+### `Model.push(thing, value)`
+### `Model.pop(thing, value)`
+### `Model.shift(thing, value)`
+### `Model.addToSet(thing, value)`
+
+##Model database interactions
+
+### `Model.persist(callback)`
+### `Model.update(modifier, callback)`
+### `Model.save(callback)`
+### `Model.remove(callback)`
+
 
 
 # Examples

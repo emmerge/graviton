@@ -44,7 +44,7 @@ Use to define your collections. Returns a `Mongo.Collection` instantiated with a
 | [options.defaultType] | `String` | Use when supplying a object for modelCls. Specify the type to use when object being transformed does not contain _type. |
 | [options.typeAttribute] | `String` | Optional key to the type attribute if you want to use something other than the default `_type`. |
 | [options.timestamps] | `boolean` | If `true` and you have the `collection-hooks` package installed, `createdAt` and `updatedAt` timestamps will be added to your models. |
-| [options.\<relationName\>] | `Object` | Use to define relationships with other collections. See Relations section below. |
+| [options.\<_relationships_\>] | `Object` | **DEPRECATED (define relations on the modelCl)** - Use to define relationships with other collections. See Relations section below. |
 
 
 ###`Graviton.getProperty(key)`
@@ -69,16 +69,34 @@ You can pass an object instead of [key, value] to set several at once.
 ###`Graviton.isModel(obj)`
 Use to check if an object is a model.
 
-## Relations
+## Defining Relations
 
-* belongsTo:
-* belongsToMany:
-* hasOne:
-* hasMany:
-* embeds:
-* embedsMany:
+Singular relation types:
 
-Pass the following as keys to Graviton.define do declare relationships with other collections. Example:
+* belongsTo
+* hasOne
+* embeds
+
+Multiple relation types:
+
+* belongsToMany
+* hasMany
+* embedsMany
+* hasAndBelongsToMany
+
+options:
+
+| Key | Type |  Description |
+| --- | ---- | ----------- |
+| [collection] | `Mongo.Collection` | collection this relation refereneces |
+| [collectionName] _or_ [klass] _or_ [relationName] | `String` | the name of another collection defined in Graviton |
+| [field] | `String` | the key name on this document |
+| [foreignKey] | `String` | used to specify the key name on the foreign document (if not `_id`) |
+
+
+
+
+Pass these as keys in the options Object to `Model.extend` or `Graviton.define` to declare relationships with other collections. Example:
  
 ```javascript
 CarModel = Graviton.Model.extend({

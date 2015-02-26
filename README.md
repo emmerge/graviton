@@ -161,20 +161,22 @@ car.windows.all(); // returns all models
 car.windows.at(2); // only builds one model
 ```
 
-## Graviton.Model
+## Graviton.Model.extend
 
 Graviton transforms collection objects into Models for you. This allows them to carry useful metadata and functions with the data. The vanilla Graviton.Model allows for basic functionality. Defining an extension of the Graviton.Model allows you to specify details of the collection's relationships or other custom functionality.
 
-* `Graviton.Model.extend({Options}, {ExtensionPrototype});` Use to define your collections. Returns a Mongo.Collection instantiated with a transform function based on the options passed.
+###`Graviton.Model.extend(options, extensionPrototype)`
+Use to create a model constructor.
 
-  *Options*
-    * `defaults`: an object containing default key:value pairs for the collection. These key:values will be added to all model instances where there is not already a stored value with the same key. Functions should not be placed here as stored records cannot have functions as values.
-    * `initialize`: a function which will be run on initialization.
-    * _relationships_: define how this model relates to other collections. `belongsTo`, `belongsToMany`, `hasOne`, `hasMany`, etc.
-    
-  *ExtensionPrototype*
-    * This object contains the extension prototype. This is the place to add functions to the model. Values could also be placed here if they relate to this specific model. These do not behave as attributes - any values placed here will not be stored.
-      
+| Param | Type | Description |
+| ----- | ---- | ----------- |
+| [options] | `Object` | options |
+| [options.defaults] | `Object` | an object containing default key:value pairs for the collection. These key:values will be added to all model instances where there is not already a stored value with the same key. Functions should not be placed here as stored records cannot have functions as values. |
+| [options.initialize] | `Function` | a function which will be run on initialization. |
+| [options.\<_relationships_\>] | `Object` | define how this model relates to other collections. `belongsTo`, `belongsToMany`, `hasOne`, `hasMany`, etc. |
+| [extensionPrototype] | `Object` | This object contains the extension prototype. This is the place to add functions to the model. Values could also be placed here if they relate to this specific model. These do not behave as attributes - any values placed here will not be stored. |
+
+
 
 # Examples
 

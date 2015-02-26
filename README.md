@@ -161,6 +161,51 @@ car.windows.all(); // returns all models
 car.windows.at(2); // only builds one model
 ```
 
+### Relations to Meteor.users collection
+You can have relations to the Meteor.users collection (added by Meteor built in package `accounts-base`). You can choose to make relations directly to the collection like this:
+
+```javascript
+hasMany: {
+  users: {
+    collection: Meteor.users,
+    foreignKey: 'foreignId'
+  }
+}
+```
+
+You can also define or register 'users' in Graviton. `Graviton.define()` treats 'users' as a special collection and backs it with Meteor.users.
+
+```javascript
+Graviton.define('users', options);
+```
+
+_or_
+
+```javascript
+Graviton.registerCollection(Meteor.users);
+```
+
+Then the following configuration is valid:
+
+```javascript
+hasMany: {
+  users: {
+    collectionName: 'users',
+    foreignKey: 'foreignId'
+  }
+}
+```
+
+Note: Unlike other Graviton defined collections the special 'user' collection defined in Graviton will not tranform results into models by default. This is also true for user objects returned from relations. This is done for maximum compatability with Meteor itself and other external pacakges. The following are examples of how to get a user Model.
+
+```javascript
+GravitonUsers = Graviton.define('users', options);
+GravitonUsers.build(Meteor.user());
+
+// or from a relation
+GravitonUsers.build(Chats.findOne().user());
+```
+
 ## Graviton.Model.extend
 
 Graviton transforms collection objects into Models for you. This allows them to carry useful metadata and functions with the data. The vanilla Graviton.Model allows for basic functionality. Defining an extension of the Graviton.Model allows you to specify details of the collection's relationships or other custom functionality.

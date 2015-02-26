@@ -21,7 +21,7 @@ Package.on_use(function (api, where) {
 });
 
 Package.on_test(function (api) {
-  api.use(['underscore', 'emmerge:graviton', 'tinytest', 'test-helpers']);
+  api.use(['mongo', 'underscore', 'emmerge:graviton', 'tinytest', 'test-helpers']);
 
   api.add_files([
     'test/test-helpers.js',
@@ -29,6 +29,7 @@ Package.on_test(function (api) {
     'test/model-test.js',
     'test/legacy-test.js',
     'test/packages-test.js',
+    'test/incomplete-relation-configs.js',
     'test/unit-test.js'
   ],
   ['client', 'server']);

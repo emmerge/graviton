@@ -84,10 +84,10 @@ Multiple relation types:
 * embedsMany
 * hasAndBelongsToMany
 
-options:
+Each of these is defined as a configuration object with the following keys/value pairs:
 
 | Key | Type |  Description |
-| --- | ---- | ----------- |
+| --- | ---- | ------------ |
 | [collection] | `Mongo.Collection` | collection this relation refereneces |
 | [collectionName] _or_ [klass] _or_ [relationName] | `String` | the name of another collection defined in Graviton |
 | [field] | `String` | the key name on this document |

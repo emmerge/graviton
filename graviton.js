@@ -196,6 +196,11 @@ Graviton.define = function(collectionName, options) {
   return collection;
 };
 
+Graviton.registerCollection = function(collection) {
+  if (collection && collection instanceof Mongo.Collection && collection._name)
+    this._collections[collection._name] = collection;
+};
+
 // alias
 Graviton.defineCollection = Graviton.define;
 

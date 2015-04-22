@@ -28,6 +28,7 @@ Package.on_test(function (api) {
     'test/relation-test.js',
     'test/model-test.js',
     'test/legacy-test.js',
+    'test/extension-test.js',
     'test/packages-test.js',
     'test/incomplete-relation-configs.js',
     'test/unit-test.js'

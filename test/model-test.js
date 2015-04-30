@@ -47,7 +47,7 @@ var ElectricCarModel = CarModel.extend({
     make: 'Tesla'
   },
   initialize: function() {
-    this._super.initialize.call(this);
+    CarModel.initialize.apply(this, arguments);
     this.volume = 0;
   },
   hasMany: {
@@ -62,12 +62,19 @@ var ElectricCarModel = CarModel.extend({
   },
   start: function() {
     if (this.get('isCharged')) {
-      this._super.start();
+      CarModel.prototype.start.call(this);
       this.set('isCharged', false);
       return true;
     } else {
       return false;
     }
+  }
+});
+
+var AmphibiousElectricCarModel = ElectricCarModel.extend({
+  initialize: function() {
+    ElectricCarModel.initialize.apply(this, arguments);
+    this.depth = 100;
   }
 });
 
@@ -100,7 +107,8 @@ var Car = Graviton.define('model-test-cars', {
   modelCls: {
     gas: CarModel,
     electric: ElectricCarModel,
-    flying: FlyingElectricCarModel
+    flying: FlyingElectricCarModel,
+    boat: AmphibiousElectricCarModel
   },
   defaultType: 'gas'
 });
@@ -163,6 +171,19 @@ Tinytest.add('Model - relation inheritance', function(test) {
   fcar.drivers.add();
   test.equal(fcar.batteries.find().count(), 1);
   test.equal(fcar.drivers.find().count(), 1);
+});
+
+Tinytest.add('Model - initialize', function(test) {
+  var car = Car.build({_type: 'gas'});
+  test.equal(car.volume, 5);
+  test.equal(car.speed, 11);
+});
+
+Tinytest.add('Model - initialize inheritance', function(test) {
+  var boat = Car.build({_type: 'boat'});
+  test.equal(boat.volume, 0);
+  test.equal(boat.speed, 11);
+  test.equal(boat.depth, 100);
 });
 
 Tinytest.add('Model - inheritance', function(test) {

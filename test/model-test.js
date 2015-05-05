@@ -253,6 +253,19 @@ addTest('Model.prototype - set', function(test) {
   test.equal(Car.findOne(c._id).get('color'), 'brown');
   test.equal(Car.findOne(c._id).get('speed'), 'slow');
   test.equal(Car.findOne(c._id).get('brand'), 'Ford');
+
+  var d = new Date;
+  var fn = function() {};
+  c.set({date: d, fn: fn}).save();
+  test.isTrue(c.get('date') === d); // dates should not be cloned
+
+  var nested = {other: 'value'};
+  var obj = {some: 'object', nested: nested};
+
+  c.set('object', obj).save();
+  test.isFalse(c.get('object') === obj); // plain objects should be cloned
+  test.isFalse(c.get('object.nested') === nested);
+
 });
 
 // modify doesn't update the database

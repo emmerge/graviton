@@ -254,7 +254,7 @@ addTest('Model.prototype - set', function(test) {
   test.equal(Car.findOne(c._id).get('speed'), 'slow');
   test.equal(Car.findOne(c._id).get('brand'), 'Ford');
 
-  var d = new Date;
+  var d = new Date();
   var fn = function() {};
   c.set({date: d, fn: fn}).save();
   test.isTrue(c.get('date') === d); // dates should not be cloned

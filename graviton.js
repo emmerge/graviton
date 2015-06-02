@@ -70,6 +70,21 @@ Graviton.setProperty = function(obj, key, val) {
   }
 };
 
+Graviton.unsetProperty = function(obj, key) {
+  if (!key) throw new Error("Cannot unsetProperty with no key specified");
+  var arr = key.split(".");
+  while (obj && arr.length > 1) {
+    key = arr.shift();
+    if (_.isUndefined(obj[key]))
+      return;  // The nested key can't possibly exist, it is already unset
+    obj = obj[key];
+  }
+  if (arr.length == 1) {
+    delete obj[arr[0]];
+    return;
+  }
+}
+
 // currently mongo sanitize causes ambiguous / non-unique keys for some inputs such as...
 // '$#foo' vs '#foo'
 // 'foo@.bar' vs 'foo.@bar'

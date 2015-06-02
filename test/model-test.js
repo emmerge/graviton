@@ -268,6 +268,27 @@ addTest('Model.prototype - set', function(test) {
 
 });
 
+// unsets attributes(s) locally and adds a pending set modification
+// that is executed when save is called
+addTest('Model.prototype - unset', function(test) {
+  var c = Car.create({color: 'brown', speed: 'slow', brand: 'Puegot', stickerPrice: 750});
+  c.unset('stickerPrice');
+  c.unset('color','speed');
+  c.unset({brand: ''});
+  test.isUndefined( c.get('stickerPrice'), 'Single value unset is not undefined' );
+  test.isUndefined( c.get('color'), 'Array value unset is not undefined (1), is instead '+c.get('color'));
+  test.isUndefined( c.get('speed'), 'Array value unset is not undefined (2), is instead '+c.get('speed'));
+  test.isUndefined( c.get('brand'), 'Object value unset is not undefined, is instead '+c.get('brand'));
+
+  test.equal(c._pendingMods.length, 3, 'Pending mod count is off. Expect 3, is '+c._pendingMods.length);
+
+  var c2 = Car.create({brand: 'Volvo', safety: {front: '5star', side: '5star', reverse: '4star', restraint: '4star' }});
+  c2.unset('safety.reverse');
+  test.isUndefined( c2.get('safety.reverse'), 'Nested value unset is not undefined');
+  test.isNotNull( c2.get('safety.front'), 'Nested value sibling is missing, but should exist');
+  test.equal(c2._pendingMods.length, 1, 'Pending mod count is off. Expect 1, is '+c2._pendingMods.length);
+});
+
 // modify doesn't update the database
 // appies mongodb modifier(s) to the model's attributes
 // holds on to modifiers to apply to db when save is called

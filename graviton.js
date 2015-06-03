@@ -83,7 +83,7 @@ Graviton.unsetProperty = function(obj, key) {
     delete obj[arr[0]];
     return;
   }
-}
+};
 
 // currently mongo sanitize causes ambiguous / non-unique keys for some inputs such as...
 // '$#foo' vs '#foo'

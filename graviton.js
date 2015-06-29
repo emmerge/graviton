@@ -164,12 +164,14 @@ Graviton.define = function(collectionName, options) {
     'modelCls', // either model constructor or object containing model constructors
     'defaultType', // used only when modelCls is an object
     'typeAttribute', // attribute to use for type instead of _type
+    'registerCollection', // if true, saves this collection in Gravition._collections[collectionName]
     'timestamps',
     'name'
   );
 
   _.defaults(options, {
-    persist: true
+    persist: true,
+    registerCollection: true
   });
 
   options.relations = relations;
@@ -205,7 +207,9 @@ Graviton.define = function(collectionName, options) {
     }
   }
   
-  this._collections[collectionName] = collection;
+  if (options.registerCollection) {
+    this._collections[collectionName] = collection;
+  }
   collection._graviton = options;
 
   return collection;

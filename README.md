@@ -9,7 +9,7 @@ Allows you to:
 * Define relationships between collections.
 * Traverse relationships and retrieve related models.
 * Use other packages to handle validation (meteor-simple-schema) hooks (meteor-collection-hooks) and relational pub/sub (reactive-relations).
- 
+
 Collections defined with Graviton automatically convert retrieved objects into models. You specify the type(s) when define the collection. Passing `{transform: null}` to `find()` etc. will bypass model transformation. The raw document is stored in model.attributes. Use built-in transformation methods like set, push, pop to make changes to your model locally. Call `model.save()` to persist changes to the database. All methods work on both server and client.
 
 ##  Installation
@@ -48,7 +48,7 @@ Use to define your collections. Returns a `Mongo.Collection` instantiated with a
 
 
 ###`Graviton.getProperty(key)`
-Use to access deeply-nested attributes without worry of throwing errors. Use period-delimited strings as keys. For example: 
+Use to access deeply-nested attributes without worry of throwing errors. Use period-delimited strings as keys. For example:
 
 ```javascript
 Gravition.getPropery({}, 'some.deep.nested.prop')
@@ -56,7 +56,7 @@ Gravition.getPropery({}, 'some.deep.nested.prop')
 would simply return `undefined` instead of throwing an error because `obj.some` is `undefined`. This method works best with keys that are meant to be stored in mongo since periods are not allowed in them.
 
 ###`Graviton.setProperty(thing, [value])`
-Set deeply-nested attributes. Example: 
+Set deeply-nested attributes. Example:
 
 ```javascript
 var obj = {};
@@ -97,7 +97,7 @@ Each of these is defined as a configuration object with the following keys/value
 
 
 Pass these as keys in the options Object to `Model.extend` or `Graviton.define` to declare relationships with other collections. Example:
- 
+
 ```javascript
 CarModel = Graviton.Model.extend({
   belongsTo: {
@@ -275,7 +275,31 @@ console.log('Newly created comment id', comment._id);
 
 ### `belongsTo` examples (simplified from graviscope)
 ```javascript
+Posts = Graviton.define('posts', {
+  hasMany: {
+    comments: {
+      collection: 'comments',
+      foreignKey: 'postId'
+    }
+  }
+});
 
+Comments = Graviton.define('comments', {
+  belongsTo: {
+    post: {
+      collection: 'posts',
+      field: 'postId'
+    }
+  }
+})
 ```
 
-
+```javascript
+post = Posts.findOne();
+comment = Comments.build();
+comment.set({author:'Steve', body:'Check out the Posts.hasMany.comments relationship.'})
+post.comments.add(comment);
+comment.post()
+// return  Posts object.
+console.log('It will return same _id :',post._id,comment.post()._id)
+```

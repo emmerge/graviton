@@ -19,7 +19,9 @@ Mongo.Collection.prototype.all = ManyRelation.prototype.all;
 Mongo.Collection.prototype.build = function(obj) {
   if (!_.isObject(obj)) obj = {};
   var mdl = this._graviton.model(obj);
-  mdl._id = obj._id;
+  if (obj._id) {
+    mdl._id = obj._id;
+  }
   return mdl;
 };
 
@@ -159,7 +161,7 @@ Graviton.define = function(collectionName, options) {
 
   var relations = _.pick(options, Relation.typeNames());
 
-  options = _.pick(options, 
+  options = _.pick(options,
     'persist', // if false, is backed by a local collection only
     'modelCls', // either model constructor or object containing model constructors
     'defaultType', // used only when modelCls is an object
@@ -206,7 +208,7 @@ Graviton.define = function(collectionName, options) {
       });
     }
   }
-  
+
   if (options.registerCollection) {
     this._collections[collectionName] = collection;
   }

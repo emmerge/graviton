@@ -197,12 +197,12 @@ Graviton.define = function(collectionName, options) {
     // uses collection-hooks package
     if (Meteor.isServer && options.timestamps && collection.before) {
       collection.before.insert(function(userId, doc) {
-        var now = +new Date();
+        var now = +new Date(); // number
         doc.createdAt = now;
         doc.updatedAt = now;
       });
       collection.before.update(function(userId, doc, fieldNames, modifier, options) {
-        var now = +new Date();
+        var now = +new Date(); // number
         modifier.$set = modifier.$set || {};
         modifier.$set.updatedAt = now;
       });

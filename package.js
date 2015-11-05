@@ -5,20 +5,16 @@ Package.describe({
   version: '0.0.19'
 });
 
-Package.onUse(function (api, where) {
+Package.onUse(function(api) {
 
-  if (api.versionsFrom) { // 0.9.0+ litmus test
-    api.versionsFrom("0.9.1");
-    api.use('mongo', ['client', 'server']);
-  }
+  api.versionsFrom('0.9.1');
 
   api.use([
+    'mongo',
     'underscore',
     'minimongo',
     'peerlibrary:async@0.9.2_1',
     'ecmascript'
-  ], [
-    'client', 'server'
   ]);
 
   api.addFiles([
@@ -26,31 +22,27 @@ Package.onUse(function (api, where) {
     'lib/relations.js',
     'lib/model.js',
     'graviton.js'
-  ], [
-    'client', 'server'
   ]);
 
-  if (typeof api.export !== 'undefined') {
-    api.export("Graviton", ["client", "server"]);
-  }
+  api.export('Graviton');
 });
 
-Package.onTest(function (api) {
+Package.onTest(function(api) {
   api.use([
     'mongo',
     'underscore',
     'ecmascript',
     'coffeescript',
-    'emmerge:graviton',
     'sanjo:jasmine@0.20.2',
     'velocity:html-reporter',
-    'velocity:helpers'
-  ], [
-    'client', 'server'
+    'velocity:helpers',
+    'emmerge:graviton',
+    'insecure',
+    'autopublish'
   ]);
 
   api.addFiles([
-    // 'test/test-helpers.js',
+    'test/test-helpers.js',
     // 'test/relation-test.js',
     // 'test/model-test.js',
     // 'test/legacy-test.js',
@@ -58,9 +50,12 @@ Package.onTest(function (api) {
     // 'test/packages-test.js',
     // 'test/incomplete-relation-configs.js',
     // 'test/unit-test.js'
-    'test/mongo-query.coffee'
-  ],
-  ['client', 'server']);
+    'test/graviton-spec.js',
+    'test/relation-spec.js'
+    // 'test/mongo-query-spec.coffee'
+    // 'test/test-model-definitions.js',
+    // 'test/model-spec.coffee'
+  ]);
 });
 
 

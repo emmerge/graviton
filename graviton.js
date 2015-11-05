@@ -1,12 +1,28 @@
-Graviton = {
+Graviton = class Graviton {
+  static getCollection(options) {
+    var name;
+    if (_.isString(options)) {
+      name = options;
+    } else
+    if (_.isObject(options)) {
+      name = options.collectionName || options.collection || options.klass || options.relationName;
+    }
+    if (name) {
+      return Graviton._collections[name];
+    }
+  }
+};
+
+
+_.extend(Graviton, {
   MongoQuery: MongoQuery,
   MongoModifier: MongoModifier,
   NModel: NModel,
   Model: Model,
   Relation: Relation,
-  ManyRelation: ManyRelation,
+  // ManyRelation: ManyRelation,
   _collections: {}
-};
+});
 
 /**
  *
@@ -15,7 +31,7 @@ Graviton = {
  */
 
 // all() convenience method == find().fetch()
-Mongo.Collection.prototype.all = ManyRelation.prototype.all;
+// Mongo.Collection.prototype.all = ManyRelation.prototype.all;
 
 // build an instance of this collections model type but do not save it to the db
 // returns the built model.
@@ -162,7 +178,7 @@ var getModelCls = function(obj, options) {
 Graviton.define = function(collectionName, options) {
   if (!options) options = {};
 
-  var relations = _.pick(options, Relation.typeNames());
+  var relations = {}; //_.pick(options, Relation.typeNames());
 
   options = _.pick(options,
     'persist', // if false, is backed by a local collection only

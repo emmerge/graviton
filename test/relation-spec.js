@@ -41,7 +41,6 @@ describe('Graviton.Relation', function() {
 
     it('should find related documents', function() {
       var relation = this.model.widgets;
-      console.log(relation);
       expect(relation.find().count()).toEqual(2);
     });
   });

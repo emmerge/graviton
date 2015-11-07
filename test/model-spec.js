@@ -22,6 +22,7 @@ describe('Graviton.Model', function() {
       array: ['one', 'two']
     });
   });
+
   it('should have relations', function() {
     expect(_.isFunction(this.mdl.something)).toBe(true);
   });
@@ -32,6 +33,7 @@ describe('Graviton.Model', function() {
       expect(this.mdl.get('object.deeper.nesting')).toEqual('level 2');
       expect(this.mdl.get('array.1')).toEqual('two');
     });
+
     it('should return clones', function() {
       var obj = this.mdl.get('object');
       expect(obj).not.toBe(this.mdl.attributes.object);

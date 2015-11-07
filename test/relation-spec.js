@@ -1,4 +1,4 @@
-class ThingModel extends Graviton.NModel {}
+class ThingModel extends Graviton.Model {}
 ThingModel.relations({
   belongsTo: {
     related: {
@@ -10,15 +10,11 @@ ThingModel.relations({
 var BaseCol = Graviton.define('relation-test-base');
 var ForeignCol = Graviton.define('relation-test-foreign');
 allowAll(BaseCol); allowAll(ForeignCol);
-function reset() {
-  BaseCol.remove({});
-  ForeignCol.remove({});
-}
 
 describe('Graviton.Relation', function() {
   describe('BelongsTo', function() {
     beforeEach(function() {
-      reset();
+      resetDB();
       this.model = new ThingModel(BaseCol, {otherId: '123'});
       ForeignCol.insert({_id: '123'});
     });

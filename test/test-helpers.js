@@ -13,3 +13,16 @@ allowAll = function(klass) {
     });
   }
 };
+
+resetDB = function() {
+  for (let name of Object.keys(Graviton._collections)) {
+    let col = Graviton._collections[name];
+    if (Meteor.isServer) {
+      col.remove({});
+    } else {
+      col.find({}, {transform: null}).forEach((doc) => {
+        col.remove({_id: doc._id});
+      });
+    }
+  }
+};

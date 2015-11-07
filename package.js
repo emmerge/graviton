@@ -50,11 +50,11 @@ Package.onTest(function(api) {
     // 'test/packages-test.js',
     // 'test/incomplete-relation-configs.js',
     // 'test/unit-test.js'
+    'test/mongo-query-spec.js',
     'test/graviton-spec.js',
-    'test/relation-spec.js'
-    // 'test/mongo-query-spec.coffee'
+    'test/relation-spec.js',
+    'test/model-spec.js'
     // 'test/test-model-definitions.js',
-    // 'test/model-spec.coffee'
   ]);
 });
 

@@ -17,7 +17,6 @@ Graviton = class Graviton {
 _.extend(Graviton, {
   MongoQuery: MongoQuery,
   MongoModifier: MongoModifier,
-  NModel: NModel,
   Model: Model,
   Relation: Relation,
   // ManyRelation: ManyRelation,

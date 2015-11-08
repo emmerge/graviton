@@ -3,15 +3,25 @@ describe('Graviton.Model', function() {
     class TestModel extends Graviton.Model {
 
     }
-    TestModel.relations({
+    TestModel
+    .relations({
       belongsTo: {
         something: {
           collectionName: 'something',
           field: 'somethingId'
         }
       }
+    })
+    .defaults({
+      foo: 'bar',
+      speed: 'fast',
+      driver: {
+        name: 'Mario',
+        age: 54
+      }
     });
-    this.mdl = new TestModel(new Mongo.Collection(), {
+    this.collection = new Mongo.Collection();
+    this.mdl = new TestModel(this.collection, {
       hello: 'World',
       object: {
         nesting: 'level 1',
@@ -19,6 +29,7 @@ describe('Graviton.Model', function() {
           nesting: 'level 2'
         }
       },
+      speed: 'slow',
       array: ['one', 'two']
     });
   });
@@ -46,9 +57,23 @@ describe('Graviton.Model', function() {
       this.mdl.set('newkey', 'aValue');
       expect(this.mdl.get('newkey')).toEqual('aValue');
       this.mdl.set('newkey', {diff: 'value'});
-      this.mdl.set('foo.inner.other', 'xyz');
-      expect(this.mdl.get('foo')).toEqual({inner: {other: 'xyz'}});
-      expect(this.mdl._saveQuery.modObject()).toEqual({$set: {'newkey': {'diff': 'value'}, 'foo.inner.other': 'xyz'}});
+      this.mdl.set('some.inner.other', 'xyz');
+      expect(this.mdl.get('some')).toEqual({inner: {other: 'xyz'}});
+      expect(this.mdl._saveQuery.modObject()).toEqual({$set: {'newkey': {'diff': 'value'}, 'some.inner.other': 'xyz'}});
+    });
+  });
+
+  describe('defaults', function() {
+    it('should initialize with default values', function() {
+      expect(this.mdl.get('foo')).toEqual('bar');
+      expect(this.mdl.get('driver.name')).toEqual('Mario');
+    });
+  });
+
+  describe('save', function() {
+    it('should insert a doc to collection', function() {
+      this.mdl.save();
+      expect(this.collection.findOne(this.mdl._id)).toEqual(this.mdl.attributes);
     });
   });
 });

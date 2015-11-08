@@ -53,7 +53,8 @@ Package.onTest(function(api) {
     'test/mongo-query-spec.js',
     'test/graviton-spec.js',
     'test/relation-spec.js',
-    'test/model-spec.js'
+    'test/model-spec.js',
+    'test/mixin-spec.js'
     // 'test/test-model-definitions.js',
   ]);
 });

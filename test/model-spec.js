@@ -1,25 +1,29 @@
 describe('Graviton.Model', function() {
   beforeEach(function() {
+
+    function defn() {
+      this.relations({
+        belongsTo: {
+          something: {
+            collectionName: 'something',
+            field: 'somethingId'
+          }
+        }
+      });
+      this.defaults({
+        foo: 'bar',
+        speed: 'fast',
+        driver: {
+          name: 'Mario',
+          age: 54
+        }
+      });
+    }
     class TestModel extends Graviton.Model {
 
     }
-    TestModel
-    .relations({
-      belongsTo: {
-        something: {
-          collectionName: 'something',
-          field: 'somethingId'
-        }
-      }
-    })
-    .defaults({
-      foo: 'bar',
-      speed: 'fast',
-      driver: {
-        name: 'Mario',
-        age: 54
-      }
-    });
+    defn.call(TestModel);
+
     this.collection = new Mongo.Collection();
     this.mdl = new TestModel(this.collection, {
       hello: 'World',

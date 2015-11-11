@@ -27,6 +27,10 @@ CarModel
     drivers: {
       collectionName: 'model-test-people',
       foreignKey: 'carId'
+    },
+    fans: {
+      collectionName: 'model-test-people',
+      foreignKey: 'carId'
     }
   },
   belongsToMany: {
@@ -47,7 +51,7 @@ ElectricCarModel = CarModel.extend({
     make: 'Tesla'
   },
   initialize: function() {
-    CarModel.initialize.apply(this, arguments);
+    // CarModel.initialize.apply(this, arguments);
     this.volume = 0;
   },
   hasMany: {
@@ -120,3 +124,36 @@ allowAll(Person);
 Battery = Graviton.define('model-test-batteries');
 allowAll(Battery);
 
+
+
+HasParticipantsModel = Graviton.Model.extend({
+  defaults: {
+    addresses: [],
+    recipients: [],
+    participantData: {}
+  }
+});
+
+AbstractMessageModel = HasParticipantsModel.extend({
+  defaults: {
+    addresses: [], // addresses of all message participants including the sender
+    participantData: {}, // map for participant meta-data shared between participants (this is an indirect way of sharing certain contact info)
+    senderAddress: null // address that sent the message
+  }
+});
+
+HasUserDataModel = Graviton.Model.extend({
+});
+
+TaggableModel = Graviton.Model.extend({
+});
+
+CommModel = AbstractMessageModel.extend(HasUserDataModel).extend(TaggableModel).extend({
+  defaults: {
+    tags: [],
+    body: null,
+    quote: null,
+    signature: null,
+    type: 'default'
+  }
+});

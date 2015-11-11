@@ -80,4 +80,11 @@ describe('Graviton.Model', function() {
       expect(this.collection.findOne(this.mdl._id)).toEqual(this.mdl.attributes);
     });
   });
+
+  describe('extend', function() {
+    it('should add relations by name', function() {
+      var ec = Car.create({_type: 'electric'});
+      expect(ec.batteries instanceof Graviton.Relation).toBe(true);
+    });
+  });
 });

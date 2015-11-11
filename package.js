@@ -43,6 +43,7 @@ Package.onTest(function(api) {
 
   api.addFiles([
     'test/test-helpers.js',
+    'test/test-model-definitions.js',
     // 'test/relation-test.js',
     // 'test/model-test.js',
     // 'test/legacy-test.js',

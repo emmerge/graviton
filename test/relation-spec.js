@@ -1,47 +1,45 @@
-class ThingModel extends Graviton.Model {}
-ThingModel.relations({
-  belongsTo: {
-    related: {
-      collectionName: 'relation-test-foreign',
-      field: 'otherId'
-    }
-  },
-  hasMany: {
-    widgets: {
-      collectionName: 'relation-test-foreign',
-      foreignKey: 'thingId'
-    }
-  }
-});
-var BaseCol = Graviton.define('relation-test-base');
-var ForeignCol = Graviton.define('relation-test-foreign');
-allowAll(BaseCol); allowAll(ForeignCol);
+// class ThingModel extends Graviton.Model {}
+// ThingModel.relations({
+//   belongsTo: {
+//     related: {
+//       collectionName: 'relation-test-foreign',
+//       field: 'otherId'
+//     }
+//   },
+//   hasMany: {
+//     widgets: {
+//       collectionName: 'relation-test-foreign',
+//       foreignKey: 'thingId'
+//     }
+//   }
+// });
+// var BaseCol = Graviton.define('relation-test-base');
+// var ForeignCol = Graviton.define('relation-test-foreign');
+// allowAll(BaseCol); allowAll(ForeignCol);
 
 describe('Graviton.Relation', function() {
+
+  beforeEach(function() {
+    resetDB();
+  });
+
   describe('BelongsTo', function() {
-    beforeEach(function() {
-      resetDB();
-      this.model = new ThingModel(BaseCol, {otherId: '123'});
-      ForeignCol.insert({_id: '123'});
-    });
 
     it('should do a findOne', function() {
-      var relatedModel = this.model.related();
-      expect(relatedModel._id).toEqual('123');
+      var p = Person.create();
+      var c = Car.create({ownerId: p._id});
+      expect(c.owner()).toEqual(p);
     });
+
   });
 
   describe('HasMany', function() {
-    beforeEach(function() {
-      resetDB();
-      this.model = new ThingModel(BaseCol, {_id: '123'});
-      ForeignCol.insert({thingId: '123'});
-      ForeignCol.insert({thingId: '123'});
-    });
-
-    it('should find related documents', function() {
-      var relation = this.model.widgets;
-      expect(relation.find().count()).toEqual(2);
+    it('should support create', function() {
+      var c = Car.create();
+      c.drivers.create({name: "Mario"});
+      var driver = Person.findOne({carId: c._id, name: "Mario"});
+      console.log(driver, c.attributes, Person.findOne().attributes);
+      expect(driver.attributes).toEqual(c.drivers.findOne({name: "Mario"}).attributes);
     });
   });
 });

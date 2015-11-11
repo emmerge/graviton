@@ -1,4 +1,4 @@
-class CarModel extends Graviton.NModel {
+class CarModel extends Graviton.Model {
   start () {
     this.set('isRunning', true);
     return true;

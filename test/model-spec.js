@@ -86,5 +86,11 @@ describe('Graviton.Model', function() {
       var ec = Car.create({_type: 'electric'});
       expect(ec.batteries instanceof Graviton.Relation).toBe(true);
     });
+
+    it('should not modify defaults of base class', function() {
+      var Base = Graviton.Model.extend({defaults: {}});
+      var Child = Base.extend({defaults: {foo: 'bar'}});
+      expect(Base._defaults.foo).toBe(undefined);
+    });
   });
 });

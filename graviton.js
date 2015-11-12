@@ -230,5 +230,5 @@ Mongo.Collection.prototype.create = function(obj, callback) {
   } else {
     model.setId(this.insert(model.attributes));
   }
-  return model;
+  return model; // model will have an _id even if this is called with a callback
 };

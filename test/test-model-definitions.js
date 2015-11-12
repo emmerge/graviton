@@ -38,6 +38,14 @@ CarModel
       collectionName: 'model-test-people',
       field: 'dealerIds'
     }
+  },
+  // array on both ends of the association
+  manyToMany: {
+    mechanics: {
+      field: 'numbers',
+      foreignKey: 'numbers',
+      collectionName: 'model-test-people'
+    }
   }
 })
 .defaults({

@@ -206,8 +206,10 @@ var _getModelClass = function(obj, options) {
  *
  */
 
-// all() convenience method == find().fetch()
-// Mongo.Collection.prototype.all = ManyRelation.prototype.all;
+// all() convenience method
+Mongo.Collection.prototype.all = function() {
+  return this.find({}).fetch();
+};
 
 // build an instance of this collections model type but do not save it to the db
 // returns the built model.

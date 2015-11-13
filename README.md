@@ -1,5 +1,45 @@
-graviton [ ![Codeship Status for emmerge/graviton](https://codeship.com/projects/54dafd30-7cbe-0132-798d-7a5cdf781b38/status?branch=master)](https://codeship.com/projects/56481)
-========
+# Version 2 is Here!
+* Re-written with ES6 classes.
+* Uses new MongoQuery base class to manage updates/modifications.
+* Now, after making multiple modifications to a model, when save is called, only one database operation is performed.
+* Velocity tests. Run tests with `velocity -test-package ./ --port <port> --debug-port <debug-port>`
+
+## API Differences
+* Embedded relations are no longer functions, but are relation objects with `.get` methods.
+* embeds/embed/embedsMany all create the same type of relation that can be either a single item or an array.
+* Timestamps are no longer saved as numbers by default. To use old style, set `Graviton.timestampFormat = 'number';`
+* Deprecated Graviton.define options have been removed.
+* New (optional) style of declaring models:
+```
+class CarModel extends Graviton.Model {
+  start () {
+    this.set('isRunning', true);
+    return true;
+  }
+
+  stop () {
+    this.set('isRunning', false);
+    return true;
+  }
+}
+CarModel
+.relations({
+  belongsTo: {
+    owner: {
+      collectionName: 'model-test-people',
+      field: 'ownerId'
+    }
+  }
+})
+.defaults({
+  isRunning: false
+});
+```
+The old style (using extends) still works but the new style will name your classes which makes console debug experience better.
+
+## Needs
+* Finish porting tests and ensure all API exists in v2.
+* Codeship setup.
 
 Relations and models for Meteor collections.
 
@@ -44,7 +84,7 @@ Use to define your collections. Returns a `Mongo.Collection` instantiated with a
 | [options.defaultType] | `String` | Use when supplying a object for modelCls. Specify the type to use when object being transformed does not contain _type. |
 | [options.typeAttribute] | `String` | Optional key to the type attribute if you want to use something other than the default `_type`. |
 | [options.timestamps] | `boolean` | If `true` and you have the `collection-hooks` package installed, `createdAt` and `updatedAt` timestamps will be added to your models. |
-| [options.\<_relationships_\>] | `Object` | **DEPRECATED (define relations on the modelCl)** - Use to define relationships with other collections. See Relations section below. |
+| [options.\<_relationships_\>] | `Object` | **DEPRECATED (define relations on the modelCls)** - Use to define relationships with other collections. See Relations section below. |
 
 
 ###`Graviton.getProperty(key)`

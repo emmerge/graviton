@@ -217,6 +217,7 @@ Mongo.Collection.prototype.build = function(obj) {
   if (obj._id) {
     mdl._id = obj._id;
   }
+  mdl._collection = this; // keep the collection this model came out of
   return mdl;
 };
 

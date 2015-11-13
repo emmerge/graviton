@@ -46,6 +46,14 @@ CarModel
       foreignKey: 'numbers',
       collectionName: 'model-test-people'
     }
+  },
+  embed: {
+    passengers: {
+      collectionName: 'model-test-people'
+    },
+    bestFriend: {
+      collectionName: 'model-test-cars'
+    }
   }
 })
 .defaults({
@@ -126,7 +134,11 @@ Car = Graviton.define('model-test-cars', {
 });
 allowAll(Car);
 
-Person = Graviton.define('model-test-people');
+PersonModel = class PersonModel extends Graviton.Model {
+
+};
+
+Person = Graviton.define('model-test-people', {modelCls: PersonModel});
 allowAll(Person);
 
 Battery = Graviton.define('model-test-batteries');

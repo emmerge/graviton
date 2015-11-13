@@ -82,4 +82,29 @@ describe('Graviton.Relation', function() {
     });
   });
 
+  describe('Embedded', function() {
+    beforeEach(function() {
+      this.car = Car.create({
+        passengers: [{name: 'Luigi'}, {name: 'Yoshi'}],
+        bestFriend: {_type: 'electric', make: 'Nissan'}
+      });
+    });
+
+    it('should embed arrays of objects', function() {
+      var passengers = this.car.passengers.get();
+      expect(passengers[0] instanceof PersonModel).toBe(true);
+      expect(passengers[0].get('name')).toBe('Luigi');
+    });
+
+    it('should be able to fetch a single model from an array', function() {
+      var person = this.car.passengers.get(1);
+      expect(person.get('name')).toBe('Yoshi');
+    });
+
+    it('should support single items', function() {
+      var friend = this.car.bestFriend.get();
+      expect(friend instanceof ElectricCarModel).toBe(true);
+      expect(friend.get('make')).toBe('Nissan');
+    });
+  });
 });

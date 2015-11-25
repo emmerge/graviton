@@ -89,7 +89,6 @@ describe('Graviton.Model', function() {
 
     it('should not modify defaults of base class', function() {
       var Base = Graviton.Model.extend({defaults: {}});
-      var Child = Base.extend({defaults: {foo: 'bar'}});
       expect(Base._defaults.foo).toBe(undefined);
     });
   });

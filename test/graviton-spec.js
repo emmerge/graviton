@@ -9,4 +9,13 @@ describe('Graviton', function() {
       expect(Graviton.getCollection({klass: 'graviton-test'})).toEqual(TestCol);
     });
   });
+
+  describe('defined collections', function() {
+    describe('build', function() {
+      it('should not return a model with _id = undefined', function() {
+        var car = Car.build({});
+        expect(car.hasOwnProperty('_id')).toBe(false);
+      });
+    });
+  });
 });

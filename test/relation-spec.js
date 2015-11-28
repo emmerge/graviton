@@ -32,6 +32,15 @@ describe('Graviton.Relation', function() {
     resetDB();
   });
 
+  describe('generate', function() {
+    it('should make relations chainable', function() {
+      var car = Car.create();
+      var rel = car.drivers.and(car.fans).and(car.mechanics);
+      console.log(rel);
+      expect(rel.selector).toExist();
+    });
+  });
+
   // field
   describe('BelongsTo', function() {
     it('should do a findOne', function() {

@@ -11,6 +11,7 @@ Package.onUse(function(api) {
 
   api.use([
     'mongo',
+    'ejson',
     'underscore',
     'minimongo',
     'peerlibrary:async@0.9.2_1',

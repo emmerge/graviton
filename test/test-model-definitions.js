@@ -30,7 +30,7 @@ CarModel
     },
     fans: {
       collectionName: 'model-test-people',
-      foreignKey: 'carId'
+      foreignKey: 'favoriteCarId'
     }
   },
   belongsToMany: {
@@ -109,19 +109,19 @@ FlyingElectricCarModel = ElectricCarModel.extend({
   }
 });
 
-// test defaulting collectionName to relation name
-CarOwnerModel = Graviton.Model.extend({
-  hasMany: {
-    'model-test-cars': {
-      foreignKey: 'carId'
-    }
-  }
-});
+// // test defaulting collectionName to relation name
+// CarOwnerModel = Graviton.Model.extend({
+//   hasMany: {
+//     'model-test-cars': {
+//       foreignKey: 'carId'
+//     }
+//   }
+// });
 
-CarOwner = Graviton.define('model-test-car-owners', {
-  modelCls: CarOwnerModel
-});
-allowAll(CarOwner);
+// CarOwner = Graviton.define('model-test-car-owners', {
+//   modelCls: CarOwnerModel
+// });
+// allowAll(CarOwner);
 
 Car = Graviton.define('model-test-cars', {
   modelCls: {
@@ -137,6 +137,24 @@ allowAll(Car);
 PersonModel = class PersonModel extends Graviton.Model {
 
 };
+PersonModel.relations({
+  belongsTo: {
+    car: {
+      collectionName: 'model-test-cars',
+      field: 'carId'
+    },
+    favoriteCar: {
+      collectionName: 'model-test-cars',
+      field: 'favoriteCarId'
+    }
+  },
+  hasMany: {
+    ownedCars: {
+      collectionName: 'model-test-cars',
+      foreignKey: 'carId'
+    }
+  }
+});
 
 Person = Graviton.define('model-test-people', {modelCls: PersonModel});
 allowAll(Person);

@@ -93,3 +93,21 @@ describe('Graviton.MongoModifier', function() {
 
   });
 });
+
+describe('Graviton.MongoQuery', function() {
+  beforeEach(function() {
+    var col = new Mongo.Collection(null);
+    this.shapeQuery = new Graviton.MongoQuery(col, {shape: {$in: ['flat', 'round']}});
+    this.sizeQuery = new Graviton.MongoQuery(col, {size: 'large'});
+  });
+
+  it ('should be add-able', function() {
+    var newQuery = this.shapeQuery.and(this.sizeQuery);
+    expect(newQuery.selector).toEqual({shape: {$in: ['flat', 'round']}, size: 'large'});
+  });
+
+  it ('should be or-able', function() {
+    var newQuery = this.shapeQuery.or(this.sizeQuery);
+    expect(newQuery.selector).toEqual({$or: [{shape: {$in: ['flat', 'round']}}, {size: 'large'}]});
+  });
+});

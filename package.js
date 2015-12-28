@@ -2,7 +2,7 @@ Package.describe({
   name: 'emmerge:graviton',
   summary: "Transform collection records into Models and define and use relationships between Meteor collections",
   git: "https://github.com/emmerge/graviton",
-  version: '0.0.19'
+  version: '1.0.0'
 });
 
 Package.onUse(function(api) {

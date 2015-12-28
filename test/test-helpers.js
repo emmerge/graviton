@@ -14,6 +14,7 @@ allowAll = function(klass) {
   }
 };
 
+/* jshint -W083 */
 resetDB = function() {
   for (let name of Object.keys(Graviton._collections)) {
     let col = Graviton._collections[name];

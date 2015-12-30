@@ -24,7 +24,7 @@ describe('Graviton.Model', function() {
     }
     defn.call(TestModel);
 
-    this.collection = new Mongo.Collection();
+    this.collection = new Mongo.Collection(null);
     this.mdl = new TestModel(this.collection, {
       hello: 'World',
       object: {

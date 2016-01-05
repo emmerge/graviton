@@ -36,8 +36,7 @@ describe('Graviton.Relation', function() {
     it('should make relations chainable', function() {
       var car = Car.create();
       var rel = car.drivers.and(car.fans).and(car.mechanics);
-      console.log(rel);
-      expect(rel.selector).toExist();
+      expect(_.keys(rel.selector)).toEqual(['carId', 'favoriteCarId', 'numbers']);
     });
   });
 
@@ -46,7 +45,7 @@ describe('Graviton.Relation', function() {
     it('should do a findOne', function() {
       var p = Person.create();
       var c = Car.create({ownerId: p._id});
-      expect(c.owner()).toEqual(p);
+      expect(c.owner().attributes).toEqual(p.attributes);
     });
   });
 

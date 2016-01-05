@@ -110,4 +110,12 @@ describe('Graviton.MongoQuery', function() {
     var newQuery = this.shapeQuery.or(this.sizeQuery);
     expect(newQuery.selector).toEqual({$or: [{shape: {$in: ['flat', 'round']}}, {size: 'large'}]});
   });
+
+  describe('mergeUpdate', function() {
+    it('should handle $addToSet properly', function() {
+      var op = {'source.drawing': {personId: 'abc', profession: 'painter'}};
+      this.shapeQuery.mergeUpdate({$addToSet: op});
+      expect(this.shapeQuery.$addToSet).toEqual(op);
+    });
+  });
 });

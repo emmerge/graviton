@@ -92,4 +92,13 @@ describe('Graviton.Model', function() {
       expect(Base._defaults.foo).toBe(undefined);
     });
   });
+
+  describe('create', function() {
+    it('should not insert dates as strings', function() {
+      var date = new Date();
+      var car = Car.create({purchaseDate: date});
+      car = Car.findOne(car._id);
+      expect(_.isString(car.get('purchaseDate'))).toBe(false);
+    });
+  });
 });

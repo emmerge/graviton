@@ -18,4 +18,22 @@ describe('Graviton', function() {
       });
     });
   });
+
+  describe('isModel', function() {
+    it('should determine if an object in an instance of Graviton.Model', function() {
+      var c = Car.build();
+      var ec = Car.build({_type: 'electric'});
+      expect(Graviton.isModel(c)).toBe(true);
+      expect(Graviton.isModel(ec)).toBe(true);
+      expect(Graviton.isModel({})).toBe(false);
+      expect(Graviton.isModel([])).toBe(false);
+      expect(Graviton.isModel("xxx")).toBe(false);
+      expect(Graviton.isModel(234)).toBe(false);
+      expect(Graviton.isModel(_)).toBe(false);
+      expect(Graviton.isModel(Graviton)).toBe(false);
+      expect(Graviton.isModel(Graviton.Model)).toBe(false);
+      expect(Graviton.isModel(undefined)).toBe(false);
+      expect(Graviton.isModel(null)).toBe(false);
+    });
+  });
 });

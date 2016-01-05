@@ -172,6 +172,11 @@ Graviton = class Graviton {
     if (collection && collection instanceof Mongo.Collection && collection._name)
       this._collections[collection._name] = collection;
   }
+
+  // doesn't do much. here for legacy support
+  static isModel(obj) {
+    return obj instanceof Graviton.Model;
+  }
 };
 
 // alias

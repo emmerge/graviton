@@ -91,6 +91,14 @@ describe('Graviton.MongoModifier', function() {
       });
     });
 
+    describe('addToSet', function() {
+      it('should behave as expected', function() {
+        this.mod.addToSet({'some.field': 'GOT', 'blue.blog': {free: 'RIT'}});
+        this.mod.addToSet('some.field', 'SUP');
+        expect(this.mod.modObject().$addToSet).toEqual({'some.field': 'SUP', 'blue.blog': {free: 'RIT'}});
+      });
+    });
+
   });
 });
 
@@ -101,12 +109,12 @@ describe('Graviton.MongoQuery', function() {
     this.sizeQuery = new Graviton.MongoQuery(col, {size: 'large'});
   });
 
-  it ('should be add-able', function() {
+  it('should be add-able', function() {
     var newQuery = this.shapeQuery.and(this.sizeQuery);
     expect(newQuery.selector).toEqual({shape: {$in: ['flat', 'round']}, size: 'large'});
   });
 
-  it ('should be or-able', function() {
+  it('should be or-able', function() {
     var newQuery = this.shapeQuery.or(this.sizeQuery);
     expect(newQuery.selector).toEqual({$or: [{shape: {$in: ['flat', 'round']}}, {size: 'large'}]});
   });

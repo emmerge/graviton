@@ -14,8 +14,9 @@ Graviton = class Graviton {
   }
 
   // use a period-delimited string to access a deeply-nested object
-  static getProperty(obj, string) {
-    var arr = string.split(".");
+  static getProperty(obj, key) {
+    if (!key) throw new Error("Cannot getProperty with no key specified.");
+    var arr = key.split(".");
     while (obj && arr.length) {
       obj = obj[arr.shift()];
     }

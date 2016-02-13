@@ -21,7 +21,7 @@ Package.on_use(function (api, where) {
 });
 
 Package.on_test(function (api) {
-  api.use(['mongo', 'underscore', 'emmerge:graviton', 'tinytest', 'test-helpers']);
+  api.use(['mongo', 'underscore', 'emmerge:graviton', 'tinytest', 'test-helpers', 'matb33:collection-hooks@0.8.1']);
 
   api.add_files([
     'test/test-helpers.js',
@@ -34,6 +34,9 @@ Package.on_test(function (api) {
     'test/unit-test.js'
   ],
   ['client', 'server']);
+  api.add_files([
+    'test/timestamps-test.js'
+  ], 'server');
 });
 
 

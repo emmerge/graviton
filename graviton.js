@@ -152,10 +152,14 @@ Graviton = class Graviton {
           doc.createdAt = now;
           doc.updatedAt = now;
         });
+        collection.before.upsert(function(userId, selector, modifier, options) {
+          var now = (options.timestampFormat == 'number') ? +new Date() : new Date();
+          Graviton.setProperty(modifier, '$setOnInsert.createdAt', now);
+          Graviton.setProperty(modifier, '$set.updatedAt', now);
+        });
         collection.before.update(function(userId, doc, fieldNames, modifier, options) {
           var now = (options.timestampFormat == 'number') ? +new Date() : new Date();
-          modifier.$set = modifier.$set || {};
-          modifier.$set.updatedAt = now;
+          Graviton.setProperty(modifier, '$set.updatedAt', now);
         });
       }
     }

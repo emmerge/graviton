@@ -156,7 +156,7 @@ PersonModel.relations({
   }
 });
 
-Person = Graviton.define('model-test-people', {modelCls: PersonModel});
+Person = Graviton.define('model-test-people', {modelCls: PersonModel, timestamps: false});
 allowAll(Person);
 
 Battery = Graviton.define('model-test-batteries');

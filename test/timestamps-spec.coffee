@@ -44,18 +44,19 @@ describe 'Graviton - timestamps', ->
     expect( dbRecord.get('createdAt') ).toBeUndefined()
     expect( _.isNumber(dbRecord.get('updatedAt')) ).toEqual true
 
-  it 'should get timestamps on set & save', ->
+  it 'should get timestamps on set and save', ->
+
     # insert direct to not cause timestamps
-    recordId = HasTimestamps.direct.insert({name: 'set soon'})
+    recordId = HasTimestamps.direct.insert name: 'set soon'
     # set/save normally to get an updated timestamp
-    dbRecord = HasTimestamps.findOne(recordId)
-    dbRecord.set({name: 'set done'})
+    dbRecord = HasTimestamps.findOne recordId
+    dbRecord.set name: 'set done'
     dbRecord.save()
 
-    dbRecord = HasTimestamps.findOne(recordId)
-    expect( dbRecord.get('name') ).toEqual 'set done'
-    expect( dbRecord.get('createdAt') ).toBeUndefined()
-    expect( _.isNumber(dbRecord.get('updatedAt')) ).toEqual true
+    dbRecord = HasTimestamps.findOne recordId
+    expect( dbRecord.get 'name' ).toEqual 'set done'
+    expect( dbRecord.get 'createdAt' ).toBeUndefined()
+    expect( _.isNumber dbRecord.get 'updatedAt' ).toEqual true
 
   it 'should get timestamps on upsert [insert]', ->
     HasTimestamps.upsert(

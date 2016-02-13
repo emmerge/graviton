@@ -39,7 +39,8 @@ Package.onTest(function(api) {
     'velocity:helpers',
     'emmerge:graviton',
     'insecure',
-    'autopublish'
+    'autopublish',
+    'matb33:collection-hooks@0.8.1'
   ]);
 
   api.addFiles([
@@ -59,6 +60,10 @@ Package.onTest(function(api) {
     'test/mixin-spec.js'
     // 'test/test-model-definitions.js',
   ]);
+
+  api.addFiles([
+    'test/timestamps-spec.coffee'
+  ], 'server');
 });
 
 

@@ -51,7 +51,7 @@ Allows you to:
 * Transform your Mongo docs into models with attributes and methods.
 * Define relationships between collections.
 * Traverse relationships and retrieve related models.
-* Use other packages to handle validation (meteor-simple-schema) hooks (meteor-collection-hooks) and relational pub/sub (reactive-relations).
+* Use other packages to handle validation (meteor-simple-schema) hooks (meteor-collection-hooks) and relational pub/sub (cottz:publish-relations).
 
 Collections defined with Graviton automatically convert retrieved objects into models. You specify the type(s) when define the collection. Passing `{transform: null}` to `find()` etc. will bypass model transformation. The raw document is stored in model.attributes. Use built-in transformation methods like set, push, pop to make changes to your model locally. Call `model.save()` to persist changes to the database. All methods work on both server and client.
 

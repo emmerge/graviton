@@ -1,4 +1,4 @@
-]Package.describe({
+Package.describe({
   name: 'emmerge:graviton',
   summary: "Transform collection records into Models and define and use relationships between Meteor collections",
   git: "https://github.com/emmerge/graviton",

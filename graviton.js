@@ -154,10 +154,14 @@ var getModelCls = function(obj, options) {
   return Graviton.Model;
 };
 
-// declare new collections of models
-// options contain the relations etc.
+/**
+ * Declare new collections of models
+ * @param {Object} options contain the relations etc; optional.
+ * @param {Object} options.collection contains options for the collection; optional.
+ */
 Graviton.define = function(collectionName, options) {
   if (!options) options = {};
+  var collectionOptions = options.collection || {};
 
   var relations = _.pick(options, Relation.typeNames());
 
@@ -190,9 +194,8 @@ Graviton.define = function(collectionName, options) {
   } else {
     var colName = (options.persist) ? collectionName : null;
 
-    collection = new Mongo.Collection(colName, {
-      transform: options.model
-    });
+    collectionOptions = _.extend( {}, collectionOptions, { transform: options.model } );
+    collection = new Mongo.Collection(colName, collectionOptions);
 
     // uses collection-hooks package
     if (Meteor.isServer && options.timestamps && collection.before) {

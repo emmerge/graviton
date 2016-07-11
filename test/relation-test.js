@@ -164,6 +164,31 @@ Tinytest.add('Relations - hasOne', function(test) {
   test.equal(mfr._id, c.manufacturer()._id);
 });
 
+
+var ParentModel = Graviton.Model.extend({
+  hasOne: {
+    child: {
+      collectionName: 'rt-hasone-field-child',
+      field: 'specialName',
+      foreignKey: 'specialNameForParent'
+    }
+  }
+});
+var ParentColl = Graviton.define("rt-hasone-field-parent", { modelCls: ParentModel });
+var ChildColl = Graviton.define("rt-hasone-field-child");
+
+Tinytest.add('Relations - hasOne - field', function(test) {
+  if (Meteor.isServer) {
+    ParentColl.remove({});
+    ChildColl.remove({});
+  }
+
+  var p = ParentColl.insert({specialName: 'allen'});
+  var c = ChildColl.insert({specialNameForParent: 'allen'});
+  var parent = ParentColl.findOne({_id: p});
+  test.equal(c, parent.child()._id);
+});
+
 Tinytest.add('Relations - belongsTo', function(test) {
   setup();
   test.equal(c.wheels.findOne().car()._id, c._id);

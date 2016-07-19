@@ -1,6 +1,8 @@
 
 import {expect} from 'meteor/practicalmeteor:chai';
 
+/*jshint -W030*/ // allows .true and .false without ()
+
 describe('Graviton.Model', function() {
   beforeEach(function() {
 

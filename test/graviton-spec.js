@@ -1,5 +1,7 @@
 var TestCol = Graviton.define('graviton-test');
 
+/*jshint -W030*/ // allows .true and .false without ()
+
 import {expect} from 'meteor/practicalmeteor:chai';
 
 describe('Graviton', function() {

@@ -1,3 +1,6 @@
+
+import {expect} from 'meteor/practicalmeteor:chai';
+
 describe('Graviton.MongoModifier', function() {
   describe('flattenObject', function() {
 
@@ -26,7 +29,7 @@ describe('Graviton.MongoModifier', function() {
         'a.e.g.h': 4,
         'a.e.i': 5
       };
-      expect(_.isEqual(collapsed, expected)).toEqual(true);
+      expect(_.isEqual(collapsed, expected)).to.equal(true);
     });
   });
 
@@ -34,12 +37,12 @@ describe('Graviton.MongoModifier', function() {
     var conflict = Graviton.MongoModifier.keysConflict;
 
     it('should return true if one key contains another', function() {
-      expect(conflict('a', 'a')).toBe(false); // same
-      expect(conflict('a.b.c', 'a.b.d')).toBe(false); // same length
-      expect(conflict('a.b.c.d', 'a.b.d.f.g')).toBe(false); // different length
-      expect(conflict('a.b.d.f.g', 'a.b.c.d')).toBe(false);
-      expect(conflict('a.b', 'a.b.d')).toBe(true);
-      expect(conflict('a.b.c', 'a.b')).toBe(true);
+      expect(conflict('a', 'a')).to.be.false; // same
+      expect(conflict('a.b.c', 'a.b.d')).to.be.false; // same length
+      expect(conflict('a.b.c.d', 'a.b.d.f.g')).to.be.false; // different length
+      expect(conflict('a.b.d.f.g', 'a.b.c.d')).to.be.false;
+      expect(conflict('a.b', 'a.b.d')).to.be.true;
+      expect(conflict('a.b.c', 'a.b')).to.be.true;
     });
 
   });
@@ -71,23 +74,23 @@ describe('Graviton.MongoModifier', function() {
           'pic.fir.ack': 'ile'
         }
       };
-      expect(this.mod.modObject()).toEqual(expected);
+      expect(this.mod.modObject()).to.deep.equal(expected);
     });
 
     describe('set', function() {
       it('should prevent multiple calls that conflict', function() {
         this.mod.set({x: {y: 'z', m: 'n'}});
         var set = {x: 'a'};
-        expect(() => this.mod.set(set)).toThrowError(Error);
+        expect(() => this.mod.set(set)).to.throw(Error);
 
         set = {x: {y: 'r'}};
-        expect(() => this.mod.set(set)).not.toThrowError();
+        expect(() => this.mod.set(set)).not.to.throw(Error);
       });
 
       it('should allow overlapping keys that make sense', function() {
         this.mod.set({x: {y: 'z'}});
         var set = {x: 'a'};
-        expect(() => this.mod.set(set)).toThrowError(Error);
+        expect(() => this.mod.set(set)).to.throw(Error);
       });
     });
 
@@ -95,7 +98,7 @@ describe('Graviton.MongoModifier', function() {
       it('should behave as expected', function() {
         this.mod.addToSet({'some.field': 'GOT', 'blue.blog': {free: 'RIT'}});
         this.mod.addToSet('some.field', 'SUP');
-        expect(this.mod.modObject().$addToSet).toEqual({'some.field': 'SUP', 'blue.blog': {free: 'RIT'}});
+        expect(this.mod.modObject().$addToSet).to.deep.equal({'some.field': 'SUP', 'blue.blog': {free: 'RIT'}});
       });
     });
 
@@ -111,19 +114,19 @@ describe('Graviton.MongoQuery', function() {
 
   it('should be add-able', function() {
     var newQuery = this.shapeQuery.and(this.sizeQuery);
-    expect(newQuery.selector).toEqual({shape: {$in: ['flat', 'round']}, size: 'large'});
+    expect(newQuery.selector).to.deep.equal({shape: {$in: ['flat', 'round']}, size: 'large'});
   });
 
   it('should be or-able', function() {
     var newQuery = this.shapeQuery.or(this.sizeQuery);
-    expect(newQuery.selector).toEqual({$or: [{shape: {$in: ['flat', 'round']}}, {size: 'large'}]});
+    expect(newQuery.selector).to.deep.equal({$or: [{shape: {$in: ['flat', 'round']}}, {size: 'large'}]});
   });
 
   describe('mergeUpdate', function() {
     it('should handle $addToSet properly', function() {
       var op = {'source.drawing': {personId: 'abc', profession: 'painter'}};
       this.shapeQuery.mergeUpdate({$addToSet: op});
-      expect(this.shapeQuery.$addToSet).toEqual(op);
+      expect(this.shapeQuery.$addToSet).to.deep.equal(op);
     });
   });
 });

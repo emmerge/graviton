@@ -7,7 +7,7 @@ Package.describe({
 
 Package.onUse(function(api) {
 
-  api.versionsFrom('1.2');
+  api.versionsFrom('1.3.4');
 
   api.use([
     'mongo',
@@ -34,36 +34,19 @@ Package.onTest(function(api) {
     'underscore',
     'ecmascript',
     'coffeescript',
-    'sanjo:jasmine@0.20.2',
-    'velocity:html-reporter',
     'velocity:helpers',
     'emmerge:graviton',
     'insecure',
     'autopublish',
-    'matb33:collection-hooks@0.8.1'
+    'matb33:collection-hooks@0.8.1',
+    'practicalmeteor:chai',
+    'dispatch:mocha-browser',
+    'dispatch:mocha-phantomjs@=0.1.2'
   ]);
 
-  api.addFiles([
-    'test/test-helpers.js',
-    'test/test-model-definitions.js',
-    // 'test/relation-test.js',
-    // 'test/model-test.js',
-    // 'test/legacy-test.js',
-    // 'test/extension-test.js',
-    // 'test/packages-test.js',
-    // 'test/incomplete-relation-configs.js',
-    // 'test/unit-test.js'
-    'test/mongo-query-spec.js',
-    'test/graviton-spec.js',
-    'test/relation-spec.js',
-    'test/model-spec.js',
-    'test/mixin-spec.js'
-    // 'test/test-model-definitions.js',
-  ]);
+  api.mainModule('package-tests.js');
+  api.mainModule('package-tests-server.js', 'server');
 
-  api.addFiles([
-    'test/timestamps-spec.coffee'
-  ], 'server');
 });
 
 

@@ -1,3 +1,6 @@
+
+import {expect} from 'meteor/practicalmeteor:chai';
+
 describe('Graviton.Model.mixin', function() {
   beforeEach(function() {
     class MixinBaseModel extends Graviton.Model {
@@ -66,17 +69,17 @@ describe('Graviton.Model.mixin', function() {
   });
 
   it('should add prototype methods', function() {
-    expect(this.mdl.protoMethod()).toEqual('mixin proto result');
-    expect(this.mdl.baseProtoMethod()).toEqual('base proto result');
+    expect(this.mdl.protoMethod()).to.equal('mixin proto result');
+    expect(this.mdl.baseProtoMethod()).to.equal('base proto result');
   });
 
   it('should override mixed in methods', function() {
-    expect(this.mdl.overriddenMethod()).toEqual('bar');
+    expect(this.mdl.overriddenMethod()).to.equal('bar');
   });
 
   it('should mixin relations', function() {
-    expect(this.mdl.things instanceof Graviton.Relation).toBe(true);
+    expect(this.mdl.things instanceof Graviton.Relation).to.be.true;
     var somethingRel = _.findWhere(this.mdl.constructor._relations, {relationName: 'something'});
-    expect(somethingRel.collectionName).toEqual('something');
+    expect(somethingRel.collectionName).to.equal('something');
   });
 });

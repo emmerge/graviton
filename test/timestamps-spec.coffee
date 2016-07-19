@@ -21,17 +21,17 @@ describe 'Graviton - timestamps', ->
     record = HasTimestamps.create({name: 'create'})
 
     dbRecord = HasTimestamps.findOne(record._id)
-    expect( dbRecord.get('name') ).toEqual 'create'
-    expect( _.isNumber dbRecord.get('createdAt') ).toEqual true
-    expect( _.isNumber dbRecord.get('updatedAt') ).toEqual true
+    expect( dbRecord.get('name') ).to.equal 'create'
+    expect( _.isNumber dbRecord.get('createdAt') ).to.equal true
+    expect( _.isNumber dbRecord.get('updatedAt') ).to.equal true
 
   it 'should get timestamps on insert', ->
     recordId = HasTimestamps.insert({name: 'insert'})
 
     dbRecord = HasTimestamps.findOne(recordId)
-    expect( dbRecord.get('name') ).toEqual 'insert'
-    expect( _.isNumber dbRecord.get('createdAt') ).toEqual true
-    expect( _.isNumber dbRecord.get('updatedAt') ).toEqual true
+    expect( dbRecord.get('name') ).to.equal 'insert'
+    expect( _.isNumber dbRecord.get('createdAt') ).to.equal true
+    expect( _.isNumber dbRecord.get('updatedAt') ).to.equal true
 
   it 'should get timestamps on update', ->
     # insert direct to not cause timestamps
@@ -40,9 +40,9 @@ describe 'Graviton - timestamps', ->
     HasTimestamps.update(recordId, {$set: {name: 'update done'}})
 
     dbRecord = HasTimestamps.findOne(recordId)
-    expect( dbRecord.get('name') ).toEqual 'update done'
-    expect( dbRecord.get('createdAt') ).toBeUndefined()
-    expect( _.isNumber(dbRecord.get('updatedAt')) ).toEqual true
+    expect( dbRecord.get('name') ).to.equal 'update done'
+    expect( dbRecord.get('createdAt') ).to.be.undefined
+    expect( _.isNumber(dbRecord.get('updatedAt')) ).to.equal true
 
   it 'should get timestamps on set and save', ->
 
@@ -54,9 +54,9 @@ describe 'Graviton - timestamps', ->
     dbRecord.save()
 
     dbRecord = HasTimestamps.findOne recordId
-    expect( dbRecord.get 'name' ).toEqual 'set done'
-    expect( dbRecord.get 'createdAt' ).toBeUndefined()
-    expect( _.isNumber dbRecord.get 'updatedAt' ).toEqual true
+    expect( dbRecord.get 'name' ).to.equal 'set done'
+    expect( dbRecord.get 'createdAt' ).to.be.undefined
+    expect( _.isNumber dbRecord.get 'updatedAt' ).to.equal true
 
   it 'should get timestamps on upsert [insert]', ->
     HasTimestamps.upsert(
@@ -68,10 +68,10 @@ describe 'Graviton - timestamps', ->
     )
 
     dbRecord = HasTimestamps.findOne({name: 'upsert [insert]'})
-    expect( dbRecord.get('setField') ).toEqual 'upsert [insert]'
-    expect( dbRecord.get('setOnInsertField') ).toEqual 'upsert [insert]'
-    expect( _.isNumber(dbRecord.get('createdAt')) ).toEqual true
-    expect( _.isNumber(dbRecord.get('updatedAt')) ).toEqual true
+    expect( dbRecord.get('setField') ).to.equal 'upsert [insert]'
+    expect( dbRecord.get('setOnInsertField') ).to.equal 'upsert [insert]'
+    expect( _.isNumber(dbRecord.get('createdAt')) ).to.equal true
+    expect( _.isNumber(dbRecord.get('updatedAt')) ).to.equal true
 
   it 'should get timestamps on upsert [update]', ->
     # upsert direct to not cause timestamps on the "insert" upsert
@@ -93,15 +93,15 @@ describe 'Graviton - timestamps', ->
     )
 
     # make sure only one record was inserted
-    expect( HasTimestamps.find({name: 'upsert [update]'}).count() ).toEqual 1
+    expect( HasTimestamps.find({name: 'upsert [update]'}).count() ).to.equal 1
 
     dbRecord = HasTimestamps.findOne({name: 'upsert [update]'})
     # ensure the set field changed
-    expect( dbRecord.get('setField') ).toEqual 'upsert [update done]'
+    expect( dbRecord.get('setField') ).to.equal 'upsert [update done]'
     # ensure the set on insert field did not change
-    expect( dbRecord.get('setOnInsertField') ).toEqual 'upsert [update soon]'
-    expect( dbRecord.get('createdAt')).toBeUndefined()
-    expect( _.isNumber(dbRecord.get('updatedAt'))).toEqual true
+    expect( dbRecord.get('setOnInsertField') ).to.equal 'upsert [update soon]'
+    expect( dbRecord.get('createdAt')).to.be.undefined
+    expect( _.isNumber(dbRecord.get('updatedAt'))).to.equal true
 
 
 ##############################################################
@@ -138,15 +138,15 @@ describe 'Graviton - timestamps w/ other hooks', ->
 
     dbRecord = HasTimestampsAndHooks.findOne(recordId)
 
-    expect( dbRecord.get('name') ).toEqual 'insert'
+    expect( dbRecord.get('name') ).to.equal 'insert'
 
-    expect( dbRecord.get('insertHook') ).toEqual 'happened'
-    expect( dbRecord.get('upsertHook') ).toBeUndefined()
-    expect( dbRecord.get('upsertInsertHook') ).toBeUndefined()
-    expect( dbRecord.get('updateHook') ).toBeUndefined()
+    expect( dbRecord.get('insertHook') ).to.equal 'happened'
+    expect( dbRecord.get('upsertHook') ).to.be.undefined
+    expect( dbRecord.get('upsertInsertHook') ).to.be.undefined
+    expect( dbRecord.get('updateHook') ).to.be.undefined
 
-    expect( _.isNumber(dbRecord.get('createdAt')) ).toEqual true
-    expect( _.isNumber(dbRecord.get('updatedAt')) ).toEqual true
+    expect( _.isNumber(dbRecord.get('createdAt')) ).to.equal true
+    expect( _.isNumber(dbRecord.get('updatedAt')) ).to.equal true
 
   it 'Graviton - timestamps - with other hooks - update', ->
     # insert direct to not cause timestamps
@@ -157,15 +157,15 @@ describe 'Graviton - timestamps w/ other hooks', ->
 
     dbRecord = HasTimestampsAndHooks.findOne(recordId)
 
-    expect( dbRecord.get('name') ).toEqual 'update done'
+    expect( dbRecord.get('name') ).to.equal 'update done'
 
-    expect( dbRecord.get('insertHook') ).toBeUndefined()
-    expect( dbRecord.get('upsertHook') ).toBeUndefined()
-    expect( dbRecord.get('upsertInsertHook') ).toBeUndefined()
-    expect( dbRecord.get('updateHook') ).toEqual 'happened'
+    expect( dbRecord.get('insertHook') ).to.be.undefined
+    expect( dbRecord.get('upsertHook') ).to.be.undefined
+    expect( dbRecord.get('upsertInsertHook') ).to.be.undefined
+    expect( dbRecord.get('updateHook') ).to.equal 'happened'
 
-    expect( dbRecord.get('createdAt') ).toBeUndefined()
-    expect( _.isNumber(dbRecord.get('updatedAt')) ).toEqual true
+    expect( dbRecord.get('createdAt') ).to.be.undefined
+    expect( _.isNumber(dbRecord.get('updatedAt')) ).to.equal true
 
   it 'Graviton - timestamps - with other hooks - upsert [insert]', ->
     HasTimestampsAndHooks.upsert(
@@ -178,17 +178,17 @@ describe 'Graviton - timestamps w/ other hooks', ->
 
     dbRecord = HasTimestampsAndHooks.findOne({ name: 'upsert [insert]' })
 
-    expect( dbRecord.get('name') ).toEqual 'upsert [insert]'
-    expect( dbRecord.get('setField') ).toEqual 'upsert [insert]'
-    expect( dbRecord.get('setOnInsertField') ).toEqual 'upsert [insert]'
+    expect( dbRecord.get('name') ).to.equal 'upsert [insert]'
+    expect( dbRecord.get('setField') ).to.equal 'upsert [insert]'
+    expect( dbRecord.get('setOnInsertField') ).to.equal 'upsert [insert]'
 
-    expect( dbRecord.get('insertHook') ).toBeUndefined()
-    expect( dbRecord.get('upsertHook') ).toEqual 'happened'
-    expect( dbRecord.get('upsertInsertHook') ).toEqual 'happened'
-    expect( dbRecord.get('updateHook') ).toBeUndefined()
+    expect( dbRecord.get('insertHook') ).to.be.undefined
+    expect( dbRecord.get('upsertHook') ).to.equal 'happened'
+    expect( dbRecord.get('upsertInsertHook') ).to.equal 'happened'
+    expect( dbRecord.get('updateHook') ).to.be.undefined
 
-    expect( _.isNumber(dbRecord.get('createdAt')) ).toEqual true
-    expect( _.isNumber(dbRecord.get('updatedAt')) ).toEqual true
+    expect( _.isNumber(dbRecord.get('createdAt')) ).to.equal true
+    expect( _.isNumber(dbRecord.get('updatedAt')) ).to.equal true
 
   it 'Graviton - timestamps - with other hooks - upsert [update]', ->
     # upsert direct to not cause timestamps on the "insert" upsert
@@ -210,19 +210,19 @@ describe 'Graviton - timestamps w/ other hooks', ->
     )
 
     # make sure only one record was inserted
-    expect( HasTimestampsAndHooks.find({name: 'upsert [update]'}).count() ).toEqual 1
+    expect( HasTimestampsAndHooks.find({name: 'upsert [update]'}).count() ).to.equal 1
 
     dbRecord = HasTimestampsAndHooks.findOne({name: 'upsert [update]'})
 
     # ensure the set field changed
-    expect( dbRecord.get('setField') ).toEqual 'upsert [update done]'
+    expect( dbRecord.get('setField') ).to.equal 'upsert [update done]'
     # ensure the set on insert field did not change
-    expect( dbRecord.get('setOnInsertField') ).toEqual 'upsert [update soon]'
+    expect( dbRecord.get('setOnInsertField') ).to.equal 'upsert [update soon]'
 
-    expect( dbRecord.get('insertHook') ).toBeUndefined()
-    expect( dbRecord.get('upsertHook') ).toEqual 'happened'
-    expect( dbRecord.get('upsertInsertHook') ).toBeUndefined()
-    expect( dbRecord.get('updateHook') ).toBeUndefined()
+    expect( dbRecord.get('insertHook') ).to.be.undefined
+    expect( dbRecord.get('upsertHook') ).to.equal 'happened'
+    expect( dbRecord.get('upsertInsertHook') ).to.be.undefined
+    expect( dbRecord.get('updateHook') ).to.be.undefined
 
-    expect( dbRecord.get('createdAt') ).toBeUndefined()
-    expect( _.isNumber(dbRecord.get('updatedAt')) ).toEqual true
+    expect( dbRecord.get('createdAt') ).to.be.undefined
+    expect( _.isNumber(dbRecord.get('updatedAt')) ).to.equal true

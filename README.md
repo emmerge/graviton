@@ -1,6 +1,9 @@
 graviton [![CircleCI](https://circleci.com/gh/emmerge/graviton/tree/master.svg?style=svg)](https://circleci.com/gh/emmerge/graviton/tree/master)
 ========
 
+![Graviton](https://github.com/emmerge/graviton/blob/master/graviton.png?raw=true)
+
+
 Relations and models for Meteor collections.
 
 Allows you to:

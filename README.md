@@ -35,7 +35,7 @@ The following are added to all your meteor collections:
 *`create()`* - calls build() to generate a Model instance AND inserts it into the db.
 
 ## Graviton
-###`Graviton.define(collectionName, options)`
+### `Graviton.define(collectionName, options)`
 Use to define your collections. Returns a `Mongo.Collection` instantiated with a transform function based on the options passed.
 
 | Param | Type | Description |
@@ -50,7 +50,7 @@ Use to define your collections. Returns a `Mongo.Collection` instantiated with a
 | [options.\<_relationships_\>] | `Object` | **DEPRECATED (define relations on the modelCl)** - Use to define relationships with other collections. See Relations section below. |
 
 
-###`Graviton.getProperty(key)`
+### `Graviton.getProperty(key)`
 Use to access deeply-nested attributes without worry of throwing errors. Use period-delimited strings as keys. For example:
 
 ```javascript
@@ -58,7 +58,7 @@ Gravition.getPropery({}, 'some.deep.nested.prop')
 ```
 would simply return `undefined` instead of throwing an error because `obj.some` is `undefined`. This method works best with keys that are meant to be stored in mongo since periods are not allowed in them.
 
-###`Graviton.setProperty(thing, [value])`
+### `Graviton.setProperty(thing, [value])`
 Set deeply-nested attributes. Example:
 
 ```javascript
@@ -69,7 +69,7 @@ Graviton.setProperty(obj, 'some.deeply.nested.prop', 'hello');
 
 You can pass an object instead of [key, value] to set several at once.
 
-###`Graviton.isModel(obj)`
+### `Graviton.isModel(obj)`
 Use to check if an object is a model.
 
 ## Defining Relations
@@ -213,7 +213,7 @@ GravitonUsers.build(Chats.findOne().user());
 
 Graviton transforms collection objects into Models for you. This allows them to carry useful metadata and functions with the data. The vanilla Graviton.Model allows for basic functionality. Defining an extension of the Graviton.Model allows you to specify details of the collection's relationships or other custom functionality.
 
-###`Graviton.Model.extend(options, extensionPrototype)`
+### `Graviton.Model.extend(options, extensionPrototype)`
 Use to create a model constructor.
 
 | Param | Type | Description |
@@ -224,7 +224,7 @@ Use to create a model constructor.
 | [options.\<_relationships_\>] | `Object` | define how this model relates to other collections. `belongsTo`, `belongsToMany`, `hasOne`, `hasMany`, etc. |
 | [extensionPrototype] | `Object` | This object contains the extension prototype. This is the place to add functions to the model. Values could also be placed here if they relate to this specific model. These do not behave as attributes - any values placed here will not be stored. |
 
-##Model manipulation
+## Model manipulation
 
 ### `Model.get(key)`
 ### `Model.set(thing, value)`
@@ -234,7 +234,7 @@ Use to create a model constructor.
 ### `Model.shift(thing, value)`
 ### `Model.addToSet(thing, value)`
 
-##Model database interactions
+## Model database interactions
 
 ### `Model.persist(callback)`
 ### `Model.update(modifier, callback)`
